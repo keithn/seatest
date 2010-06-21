@@ -2,7 +2,8 @@
 #define SEATEST_H
 #include <stdio.h>
 
-char* print_test_suite_header(char* s);
+void print_test_suite_header(char* filepath);
+void print_test_suite_footer( void );
 void seatest_simple_test_result(int passed, char* reason, char* function, unsigned int line);
 void seatest_assert_true(int test, char* function, unsigned int line);
 void seatest_assert_false(int test, char* function, unsigned int line);
