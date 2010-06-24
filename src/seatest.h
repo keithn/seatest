@@ -41,6 +41,9 @@ Suite / Test Management
 #define test_suite_start() do { print_test_suite_header(__FILE__); } while (0)
 #define test_suite_end() do { print_test_suite_footer();} while (0)
 
+// suite_setup()
+// suite_teardown()
+
 int run_tests(void (*tests)(void));
 
 #endif 
