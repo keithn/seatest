@@ -9,6 +9,7 @@ unsigned int GetTickCount() { return 0;}
 static int sea_tests_run = 0;
 static int sea_tests_passed = 0;
 static int sea_tests_failed = 0;
+static char* seatest_current_suite;
 
 char* test_file_name(char* path)
 {
@@ -76,9 +77,11 @@ void seatest_header_printer(char* s, int length, char f)
 	printf("\r\n");
 }
 
+
 void print_test_suite_header(char* filepath)
 {
-	seatest_header_printer(test_file_name(filepath), 50, '-');
+	seatest_current_suite = test_file_name(filepath);
+	seatest_header_printer(seatest_current_suite, 50, '-');
 	seatest_suite_tests_failed = sea_tests_failed;
 	seatest_suite_tests_run = sea_tests_run;
 }
