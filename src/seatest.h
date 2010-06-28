@@ -2,12 +2,18 @@
 #define SEATEST_H
 #include <stdio.h>
 
+/*
+Declarations
+*/
+
 void seatest_test_fixture_start(char* filepath);
 void seatest_test_fixture_end( void );
 void seatest_simple_test_result(int passed, char* reason, char* function, unsigned int line);
 void seatest_assert_true(int test, char* function, unsigned int line);
 void seatest_assert_false(int test, char* function, unsigned int line);
 void seatest_assert_int_equal(int expected, int actual, char* function, unsigned int line);
+void seatest_assert_float_equal(float expected, float actual, float delta, char* function, unsigned int line);
+void seatest_assert_double_equal(double expected, double actual, double delta, char* function, unsigned int line);
 void seatest_assert_string_equal(char* expected, char* actual, char* function, unsigned int line);
 void seatest_assert_string_ends_with(char* expected, char* actual, char* function, unsigned int line);
 void seatest_assert_string_starts_with(char* expected, char* actual, char* function, unsigned int line);
@@ -31,17 +37,15 @@ Assert Macros
 #define assert_bit_not_set(bit_number, value) { seatest_simple_test_result(!((1 << bit_number) & value), " Expected bit not to to be set" ,  __FUNCTION__, __LINE__); } while (0)
 #define assert_bit_mask_matches(value, mask) { seatest_simple_test_result(((value & mask) == mask), " Expected all bits of mask to be set" ,  __FUNCTION__, __LINE__); } while (0)
 #define assert_fail(message) { seatest_simple_test_result(0, message,  __FUNCTION__, __LINE__); } while (0)
-// assert_bit_count_equal
-// assert_struct_equal
-// assert_float_equal
-// assert_double_equal
+#define assert_float_equal(expected, actual, delta) do {  seatest_assert_float_equal(expected, actual, delta, __FUNCTION__, __LINE__); } while (0)
+#define assert_double_equal(expected, actual, delta) do {  seatest_assert_double_equal(expected, actual, delta, __FUNCTION__, __LINE__); } while (0)
 #define assert_string_contains(expected, actual) do {  seatest_assert_string_contains(expected, actual, __FUNCTION__, __LINE__); } while (0)
 #define assert_string_doesnt_contain(expected, actual) do {  seatest_assert_string_doesnt_contain(expected, actual, __FUNCTION__, __LINE__); } while (0)
 #define assert_string_starts_with(expected, actual) do {  seatest_assert_string_starts_with(expected, actual, __FUNCTION__, __LINE__); } while (0)
 #define assert_string_ends_with(expected, actual) do {  seatest_assert_string_ends_with(expected, actual, __FUNCTION__, __LINE__); } while (0)
 
 /*
-fixture / Test Management
+Fixture / Test Management
 */
 
 void fixture_setup(void (*setup)( void ));
@@ -49,7 +53,6 @@ void fixture_teardown(void (*teardown)( void ));
 #define run_test(test) do { if(seatest_should_run(__FILE__, #test)) {seatest_setup(); test(); seatest_teardown(); seatest_run_test(); }} while (0)
 #define test_fixture_start() do { seatest_test_fixture_start(__FILE__); } while (0)
 #define test_fixture_end() do { seatest_test_fixture_end();} while (0)
-
 void fixture_filter(char* filter);
 void test_filter(char* filter);
 
