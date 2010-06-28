@@ -11,6 +11,28 @@ static int sea_tests_passed = 0;
 static int sea_tests_failed = 0;
 static char* seatest_current_suite;
 
+static void (*seatest_suite_setup)( void ) = 0;
+static void (*seatest_suite_teardown)( void ) = 0;
+
+void suite_setup(void (*setup)( void ))
+{
+	seatest_suite_setup = setup;
+}
+void suite_teardown(void (*teardown)( void ))
+{
+	seatest_suite_teardown = teardown;
+}
+
+void seatest_setup()
+{
+	if(seatest_suite_setup != 0) seatest_suite_setup();
+}
+
+void seatest_teardown()
+{
+	if(seatest_suite_teardown != 0) seatest_suite_teardown();
+}
+
 char* test_file_name(char* path)
 {
 	char* file = path + strlen(path);
@@ -38,7 +60,7 @@ void seatest_simple_test_result(int passed, char* reason, char* function, unsign
 void seatest_assert_true(int test, char* function, unsigned int line)
 {
 	seatest_simple_test_result(test, "Should of been true", function, line);
-		
+
 }
 
 void seatest_assert_false(int test, char* function, unsigned int line)
@@ -61,9 +83,37 @@ void seatest_assert_string_equal(char* expected, char* actual, char* function, u
 	seatest_simple_test_result(strcmp(expected, actual)==0, s, function, line);	
 }
 
+void seatest_assert_string_ends_with(char* expected, char* actual, char* function, unsigned int line)
+{
+	char s[100];
+	sprintf(s, "Expected %s to end with %s", actual, expected);
+	seatest_simple_test_result(strcmp(expected, actual+(strlen(actual)-strlen(expected)))==0, s, function, line);	
+}
+
+void seatest_assert_string_starts_with(char* expected, char* actual, char* function, unsigned int line)
+{
+	char s[100];
+	sprintf(s, "Expected %s to start with %s", actual, expected);
+	seatest_simple_test_result(strncmp(expected, actual, strlen(expected))==0, s, function, line);	
+}
+
+void seatest_assert_string_contains(char* expected, char* actual, char* function, unsigned int line)
+{
+	char s[100];
+	sprintf(s, "Expected %s to be in %s", expected, actual);
+	seatest_simple_test_result(strstr(actual, expected)!=0, s, function, line);	
+}
+
+void seatest_assert_string_doesnt_contain(char* expected, char* actual, char* function, unsigned int line)
+{
+	char s[100];
+	sprintf(s, "Expected %s not to have %s in it", actual, expected);
+	seatest_simple_test_result(strstr(actual, expected)==0, s, function, line);	
+}
+
 void seatest_run_test(void)
 {
-	 sea_tests_run++; 
+	sea_tests_run++; 
 }
 
 void seatest_header_printer(char* s, int length, char f)
@@ -78,20 +128,51 @@ void seatest_header_printer(char* s, int length, char f)
 }
 
 
-void print_test_suite_header(char* filepath)
+void seatest_test_suite_start(char* filepath)
 {
 	seatest_current_suite = test_file_name(filepath);
 	seatest_header_printer(seatest_current_suite, 50, '-');
 	seatest_suite_tests_failed = sea_tests_failed;
 	seatest_suite_tests_run = sea_tests_run;
+	seatest_suite_teardown = 0;
+	seatest_suite_setup = 0;
 }
 
-void print_test_suite_footer()
+void seatest_test_suite_end()
 {
 	char s[100];
 	sprintf(s, "%d run  %d failed", sea_tests_run-seatest_suite_tests_run, sea_tests_failed-seatest_suite_tests_failed);
 	seatest_header_printer(s, 50, ' ');
 	printf("\r\n");
+}
+
+static char* seatest_suite_filter = 0;
+static char* seatest_test_filter = 0;
+
+void suite_filter(char* filter)
+{
+	seatest_suite_filter = filter;
+}
+
+
+void test_filter(char* filter)
+{
+	seatest_test_filter = filter;
+}
+
+
+int seatest_should_run( char* suite, char* test)
+{
+	int run = 1;
+	if(seatest_suite_filter) 
+	{
+		if(strncmp(seatest_suite_filter, suite, strlen(seatest_suite_filter)) != 0) run = 0;
+	}
+	if(seatest_test_filter) 
+	{
+		if(strncmp(seatest_test_filter, test, strlen(seatest_test_filter)) != 0) run = 0;
+	}
+	return run;
 }
 
 int run_tests(void (*tests)(void))

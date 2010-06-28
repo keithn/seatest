@@ -11,9 +11,9 @@ void all_tests( void )
 }
 
 
-int main( void )
+int main( int argc, char** argv )
 {
-	run_tests(all_tests);
+	run_tests(all_tests);	
 	return 0;
 }
 
