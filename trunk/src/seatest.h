@@ -2,8 +2,8 @@
 #define SEATEST_H
 #include <stdio.h>
 
-void seatest_test_suite_start(char* filepath);
-void seatest_test_suite_end( void );
+void seatest_test_fixture_start(char* filepath);
+void seatest_test_fixture_end( void );
 void seatest_simple_test_result(int passed, char* reason, char* function, unsigned int line);
 void seatest_assert_true(int test, char* function, unsigned int line);
 void seatest_assert_false(int test, char* function, unsigned int line);
@@ -13,7 +13,7 @@ void seatest_assert_string_ends_with(char* expected, char* actual, char* functio
 void seatest_assert_string_starts_with(char* expected, char* actual, char* function, unsigned int line);
 void seatest_assert_string_contains(char* expected, char* actual, char* function, unsigned int line);
 void seatest_assert_string_doesnt_contain(char* expected, char* actual, char* function, unsigned int line);
-int seatest_should_run( char* suite, char* test);
+int seatest_should_run( char* fixture, char* test);
 void seatest_run_test(void);
 void seatest_setup();
 void seatest_teardown();
@@ -41,16 +41,16 @@ Assert Macros
 #define assert_string_ends_with(expected, actual) do {  seatest_assert_string_ends_with(expected, actual, __FUNCTION__, __LINE__); } while (0)
 
 /*
-Suite / Test Management
+fixture / Test Management
 */
 
-void suite_setup(void (*setup)( void ));
-void suite_teardown(void (*teardown)( void ));
+void fixture_setup(void (*setup)( void ));
+void fixture_teardown(void (*teardown)( void ));
 #define run_test(test) do { if(seatest_should_run(__FILE__, #test)) {seatest_setup(); test(); seatest_teardown(); seatest_run_test(); }} while (0)
-#define test_suite_start() do { seatest_test_suite_start(__FILE__); } while (0)
-#define test_suite_end() do { seatest_test_suite_end();} while (0)
+#define test_fixture_start() do { seatest_test_fixture_start(__FILE__); } while (0)
+#define test_fixture_end() do { seatest_test_fixture_end();} while (0)
 
-void suite_filter(char* filter);
+void fixture_filter(char* filter);
 void test_filter(char* filter);
 
 int run_tests(void (*tests)(void));

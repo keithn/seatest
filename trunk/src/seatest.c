@@ -9,28 +9,28 @@ unsigned int GetTickCount() { return 0;}
 static int sea_tests_run = 0;
 static int sea_tests_passed = 0;
 static int sea_tests_failed = 0;
-static char* seatest_current_suite;
+static char* seatest_current_fixture;
 
-static void (*seatest_suite_setup)( void ) = 0;
-static void (*seatest_suite_teardown)( void ) = 0;
+static void (*seatest_fixture_setup)( void ) = 0;
+static void (*seatest_fixture_teardown)( void ) = 0;
 
-void suite_setup(void (*setup)( void ))
+void fixture_setup(void (*setup)( void ))
 {
-	seatest_suite_setup = setup;
+	seatest_fixture_setup = setup;
 }
-void suite_teardown(void (*teardown)( void ))
+void fixture_teardown(void (*teardown)( void ))
 {
-	seatest_suite_teardown = teardown;
+	seatest_fixture_teardown = teardown;
 }
 
 void seatest_setup()
 {
-	if(seatest_suite_setup != 0) seatest_suite_setup();
+	if(seatest_fixture_setup != 0) seatest_fixture_setup();
 }
 
 void seatest_teardown()
 {
-	if(seatest_suite_teardown != 0) seatest_suite_teardown();
+	if(seatest_fixture_teardown != 0) seatest_fixture_teardown();
 }
 
 char* test_file_name(char* path)
@@ -41,8 +41,8 @@ char* test_file_name(char* path)
 	return file;
 }
 
-static int seatest_suite_tests_run;
-static int seatest_suite_tests_failed;
+static int seatest_fixture_tests_run;
+static int seatest_fixture_tests_failed;
 
 void seatest_simple_test_result(int passed, char* reason, char* function, unsigned int line)
 {
@@ -128,30 +128,30 @@ void seatest_header_printer(char* s, int length, char f)
 }
 
 
-void seatest_test_suite_start(char* filepath)
+void seatest_test_fixture_start(char* filepath)
 {
-	seatest_current_suite = test_file_name(filepath);
-	seatest_header_printer(seatest_current_suite, 50, '-');
-	seatest_suite_tests_failed = sea_tests_failed;
-	seatest_suite_tests_run = sea_tests_run;
-	seatest_suite_teardown = 0;
-	seatest_suite_setup = 0;
+	seatest_current_fixture = test_file_name(filepath);
+	seatest_header_printer(seatest_current_fixture, 50, '-');
+	seatest_fixture_tests_failed = sea_tests_failed;
+	seatest_fixture_tests_run = sea_tests_run;
+	seatest_fixture_teardown = 0;
+	seatest_fixture_setup = 0;
 }
 
-void seatest_test_suite_end()
+void seatest_test_fixture_end()
 {
 	char s[100];
-	sprintf(s, "%d run  %d failed", sea_tests_run-seatest_suite_tests_run, sea_tests_failed-seatest_suite_tests_failed);
+	sprintf(s, "%d run  %d failed", sea_tests_run-seatest_fixture_tests_run, sea_tests_failed-seatest_fixture_tests_failed);
 	seatest_header_printer(s, 50, ' ');
 	printf("\r\n");
 }
 
-static char* seatest_suite_filter = 0;
+static char* seatest_fixture_filter = 0;
 static char* seatest_test_filter = 0;
 
-void suite_filter(char* filter)
+void fixture_filter(char* filter)
 {
-	seatest_suite_filter = filter;
+	seatest_fixture_filter = filter;
 }
 
 
@@ -161,12 +161,12 @@ void test_filter(char* filter)
 }
 
 
-int seatest_should_run( char* suite, char* test)
+int seatest_should_run( char* fixture, char* test)
 {
 	int run = 1;
-	if(seatest_suite_filter) 
+	if(seatest_fixture_filter) 
 	{
-		if(strncmp(seatest_suite_filter, suite, strlen(seatest_suite_filter)) != 0) run = 0;
+		if(strncmp(seatest_fixture_filter, fixture, strlen(seatest_fixture_filter)) != 0) run = 0;
 	}
 	if(seatest_test_filter) 
 	{
