@@ -18,4 +18,6 @@ void test_suite_two( void )
 	run_test(test_asserting);
 	run_test(test_assert_fails);
 	test_suite_end();
+
+	
 }

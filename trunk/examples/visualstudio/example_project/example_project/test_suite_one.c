@@ -26,10 +26,21 @@ void test_bits()
 	assert_bit_not_set(3, 0x02);	
 }
 
+void test_strings()
+{
+	char *s = "hello";
+	assert_string_equal("hello", s);
+	assert_string_contains("blah", "why say blah?");
+	assert_string_doesnt_contain("blah", "why say hello?");
+	assert_string_ends_with("h?", "why say blah?");
+	assert_string_starts_with("why", "why say blah?");
+}
+
+
 void test_suite_one( void )
 {
 	test_suite_start();               // starts a suite
-	run_test(test_strings_equal);     // run tests
+	run_test(test_strings);   // run tests
 	run_test(test_arrays_equal);
 	run_test(test_bits);
 	test_suite_end();                 // ends a suite
