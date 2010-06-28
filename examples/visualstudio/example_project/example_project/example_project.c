@@ -1,13 +1,13 @@
 #include "seatest.h"
 
-void test_suite_one( void );
-void test_suite_two( void );
+void test_fixture_one( void );
+void test_fixture_two( void );
 
 void all_tests( void )
 {
-	test_suite_one();
-	test_suite_two();
-	// add new test suites here.
+	test_fixture_one();
+	test_fixture_two();
+	// add new test fixtures here.
 }
 
 

@@ -37,11 +37,11 @@ void test_strings()
 }
 
 
-void test_suite_one( void )
+void test_fixture_one( void )
 {
-	test_suite_start();               // starts a suite
+	test_fixture_start();               // starts a fixture
 	run_test(test_strings);   // run tests
 	run_test(test_arrays_equal);
 	run_test(test_bits);
-	test_suite_end();                 // ends a suite
+	test_fixture_end();                 // ends a fixture
 }
