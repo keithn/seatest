@@ -17,7 +17,5 @@ void test_fixture_two( void )
 	test_fixture_start();
 	run_test(test_asserting);
 	run_test(test_assert_fails);
-	test_fixture_end();
-
-	
+	test_fixture_end();	
 }
