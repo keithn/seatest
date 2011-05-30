@@ -1,9 +1,11 @@
 #include "seatest.h"
-#include <conio.h>
+#include <string.h>
 #ifdef WIN32
+#include <conio.h>
 #include "windows.h"
 #else
 unsigned int GetTickCount() { return 0;}
+void _getch( void ) { }
 #endif
 
 static int sea_tests_run = 0;
@@ -102,7 +104,7 @@ void seatest_assert_int_equal(int expected, int actual, const char* function, un
 void seatest_assert_ulong_equal(unsigned long expected, unsigned long actual, const char* function, unsigned int line)
 {
 	char s[SEATEST_PRINT_BUFFER_SIZE];
-	sprintf(s, "Expected %u but was %u", expected, actual);
+	sprintf(s, "Expected %u but was %lu", expected, actual);
 	seatest_simple_test_result(expected==actual, s, function, line);	
 }
 
