@@ -104,7 +104,7 @@ void seatest_assert_int_equal(int expected, int actual, const char* function, un
 void seatest_assert_ulong_equal(unsigned long expected, unsigned long actual, const char* function, unsigned int line)
 {
 	char s[SEATEST_PRINT_BUFFER_SIZE];
-	sprintf(s, "Expected %u but was %lu", expected, actual);
+	sprintf(s, "Expected %lu but was %lu", expected, actual);
 	seatest_simple_test_result(expected==actual, s, function, line);	
 }
 
@@ -239,7 +239,7 @@ int run_tests(void (*tests)(void))
 		printf("               ALL TESTS PASSED\r\n");
 	}
 	printf("                 %d tests run\r\n", sea_tests_run);
-	printf("                    in %d ms\r\n",end - start);
+	printf("                    in %lu ms\r\n",end - start);
 	printf("==================================================\r\n");
 
 	_getch();
