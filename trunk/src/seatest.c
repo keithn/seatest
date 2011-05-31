@@ -84,13 +84,13 @@ void seatest_simple_test_result(int passed, char* reason, const char* function, 
 
 void seatest_assert_true(int test, const char* function, unsigned int line)
 {
-	seatest_simple_test_result(test, "Should of been true", function, line);
+	seatest_simple_test_result(test, "Should have been true", function, line);
 
 }
 
 void seatest_assert_false(int test, const char* function, unsigned int line)
 {
-	seatest_simple_test_result(!test, "Should of been false", function, line);	
+	seatest_simple_test_result(!test, "Should have been false", function, line);	
 }
 
 
