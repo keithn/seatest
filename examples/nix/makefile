@@ -1,11 +1,11 @@
 CC = gcc
-FILES = in_one.c in_two.c
-OUT_EXE = out_executable
+FILES = example_project.c test_suite_one.c test_suite_two.c ../../src/seatest.c
+OUT_EXE = example
 
 build: $(FILES)
-        $(CC) -o $(OUT_EXE) $(FILES)
+	$(CC) -o $(OUT_EXE) $(FILES) -I ../../src
 
 clean:
-        rm -f *.o core
+	rm -f *.o core
 
 rebuild: clean build
