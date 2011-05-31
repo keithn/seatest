@@ -6,7 +6,7 @@
 Defines
 */
 
-#define SEATEST_VERSION "0.4"
+#define SEATEST_VERSION "0.5"
 #define SEATEST_PROJECT_HOME "http://code.google.com/p/seatest/"
 #define SEATEST_PRINT_BUFFER_SIZE 100000
 
