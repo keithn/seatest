@@ -16,11 +16,8 @@ namespace SeaTest
         private FileSystemWatcher _watcher;
         public ObservableCollection<Fixture> Suite { get; set; }
 
-        private Dispatcher _dispatcher;
-
         public SeaTestViewModel()
         {
-            _dispatcher = Dispatcher.CurrentDispatcher;
             Suite = new ObservableCollection<Fixture>();            
             Update();          
         }
@@ -58,33 +55,15 @@ namespace SeaTest
             ThreadPool.QueueUserWorkItem(w => ExecuteProcess(commandLine, responseHandler));            
         }
 
-        private string _output;
         private object _executeProcessLock = new object();
 
         private void ExecuteProcess(string commandLine, Action<string> responseHandler)
         {
             lock(_executeProcessLock)
             {
-                var p = new Process();
                 try
                 {
-                    _output = "";
-                    var startInfo = new ProcessStartInfo
-                                        {
-                                            CreateNoWindow = true,
-                                            UseShellExecute = false,
-                                            Arguments = commandLine,
-                                            FileName = ExecutableUnderTest,
-                                            WindowStyle = ProcessWindowStyle.Hidden,
-                                            RedirectStandardOutput = true
-                                        };
-
-                    p.StartInfo = startInfo;
-                    p.OutputDataReceived += CaptureOutput;
-                    p.Start();
-                    p.BeginOutputReadLine();
-                    p.WaitForExit();
-                    responseHandler(_output);
+                    FileSystem.RunFile(ExecutableUnderTest, commandLine, responseHandler, this);
                 }
                 catch (Exception e)
                 {
@@ -93,11 +72,6 @@ namespace SeaTest
             }         
         }
         
-        private void CaptureOutput(object sender, DataReceivedEventArgs e)
-        {
-            _output += e.Data +"\r\n";
-        }
-
         private void UpdateTests()
         {
             Suite.Clear();
@@ -105,12 +79,7 @@ namespace SeaTest
         }
 
         private void ParseTestList(string result)
-        {
-            Invoke(() => ParseTests(result));
-        }
-
-        private void ParseTests(string result)
-        {
+        {            
             var lines = SplitIntoLines(result);
             foreach(var test in lines)
             {
@@ -125,7 +94,7 @@ namespace SeaTest
 
         private static string[] SplitCommaSepatedValues(string s)
         {
-            return s.Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries);
+            return s.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
         }
 
         private static string[] SplitIntoLines(string s)
@@ -138,7 +107,7 @@ namespace SeaTest
             var fixture = Suite.Where(f => f.Path == s).FirstOrDefault();
             if(fixture == null )
             {
-                fixture = new Fixture() { Path = s, Name = Path.GetFileNameWithoutExtension(s)};
+                fixture = new Fixture { Path = s, Name = Path.GetFileNameWithoutExtension(s)};
                 Suite.Add(fixture);
             }
             return fixture;
@@ -150,16 +119,9 @@ namespace SeaTest
             get { return _testOutput; }
             set { _testOutput = value; OnPropertyChanged("TestOutput");}
         }
-
         
-
         private void ParseTestRun(string result)
         {
-            Invoke(() => ParseTestResults(result));
-        }
-
-        private void ParseTestResults(string result)
-        {            
             var lines = SplitIntoLines(result).Where(l => l.StartsWith("[~SEA~]")).Select(l => l.Remove(0, 7)).ToList();
             foreach(var testResultLine in lines)
             {
@@ -181,21 +143,11 @@ namespace SeaTest
         private void MonitorTarget()
         {
             if(!HasValidTarget) return;
-
-            var directory = Path.GetDirectoryName(ExecutableUnderTest);
-            var filename = Path.GetFileName(ExecutableUnderTest);
-            _watcher = new FileSystemWatcher
-                           {
-                               Path = directory,
-                               NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
-                                              | NotifyFilters.FileName | NotifyFilters.DirectoryName,
-                               Filter = filename
-                           };
-            _watcher.Created += ExecutableChanged;
-            _watcher.Changed += ExecutableChanged;
-            _watcher.EnableRaisingEvents = true;
+            if(_watcher != null) _watcher.Dispose();
+            _watcher = FileSystem.Watch(ExecutableUnderTest, ExecutableChanged);            
         }
 
+        
         private void ExecutableChanged(object sender, FileSystemEventArgs e)
         {
               if(Autorun)
@@ -213,7 +165,6 @@ namespace SeaTest
         }
 
         
-
         public void Run()
         {
             if(HasValidTarget) Execute("-v -m -k [~SEA~]", ParseTestRun);
