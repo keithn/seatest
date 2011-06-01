@@ -34,5 +34,17 @@ namespace SeaTest.Properties {
                 this["ExecutableUnderTest"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Autorun {
+            get {
+                return ((bool)(this["Autorun"]));
+            }
+            set {
+                this["Autorun"] = value;
+            }
+        }
     }
 }

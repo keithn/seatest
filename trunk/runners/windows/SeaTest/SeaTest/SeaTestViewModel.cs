@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace SeaTest
 {
@@ -15,8 +16,11 @@ namespace SeaTest
         private FileSystemWatcher _watcher;
         public ObservableCollection<Fixture> Suite { get; set; }
 
+        private Dispatcher _dispatcher;
+
         public SeaTestViewModel()
         {
+            _dispatcher = Dispatcher.CurrentDispatcher;
             Suite = new ObservableCollection<Fixture>();            
             Update();          
         }
@@ -30,6 +34,12 @@ namespace SeaTest
         {
             get { return Properties.Settings.Default.ExecutableUnderTest; }
             set { Properties.Settings.Default.ExecutableUnderTest = value; Save(); OnPropertyChanged("ExecutableUnderTest"); Update();}
+        }
+
+        public bool Autorun
+        {
+            get { return Properties.Settings.Default.Autorun; }
+            set { Properties.Settings.Default.Autorun = value; Save(); OnPropertyChanged("Autorun"); }
         }
 
         private void Update()
@@ -96,16 +106,31 @@ namespace SeaTest
 
         private void ParseTestList(string result)
         {
-            var lines = result.Split(new []{'\r','\n'}, StringSplitOptions.RemoveEmptyEntries);
+            Invoke(() => ParseTests(result));
+        }
+
+        private void ParseTests(string result)
+        {
+            var lines = SplitIntoLines(result);
             foreach(var test in lines)
             {
-                var entry = test.Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries);
+                var entry = SplitCommaSepatedValues(test);
                 if(entry.Length == 2)
                 {
                     var fixture = GetFixtureByPath(entry[0]);
                     fixture.AddTest(entry[1]);
                 }
             }
+        }
+
+        private static string[] SplitCommaSepatedValues(string s)
+        {
+            return s.Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        private static string[] SplitIntoLines(string s)
+        {
+            return s.Split(new []{'\r','\n'}, StringSplitOptions.RemoveEmptyEntries);
         }
 
         private Fixture GetFixtureByPath(string s)
@@ -126,9 +151,31 @@ namespace SeaTest
             set { _testOutput = value; OnPropertyChanged("TestOutput");}
         }
 
+        
+
         private void ParseTestRun(string result)
         {
-            TestOutput = result;
+            Invoke(() => ParseTestResults(result));
+        }
+
+        private void ParseTestResults(string result)
+        {            
+            var lines = SplitIntoLines(result).Where(l => l.StartsWith("[~SEA~]")).Select(l => l.Remove(0, 7)).ToList();
+            foreach(var testResultLine in lines)
+            {
+                var values = SplitCommaSepatedValues(testResultLine);
+                if(values.Length == 4)
+                {
+                    var fixture = GetFixtureByPath(values[0]);
+                    var test = fixture.Tests.Where(t => t.Name == values[1]).FirstOrDefault();
+                    if(test != null)
+                    {
+                        bool passed = (values[3].Trim() == "Passed");
+                        test.Passed = test.HasRun ? test.Passed && passed : passed;
+                        test.HasRun = true;                        
+                    }
+                }
+            }
         }
 
         private void MonitorTarget()
@@ -145,18 +192,32 @@ namespace SeaTest
                                Filter = filename
                            };
             _watcher.Created += ExecutableChanged;
-            _watcher.Changed += ExecutableChanged;
+            //_watcher.Changed += ExecutableChanged;
             _watcher.EnableRaisingEvents = true;
         }
 
         private void ExecutableChanged(object sender, FileSystemEventArgs e)
         {
-                                
+              if(Autorun)
+              {
+                  Thread.Sleep(500);  // find a way to wait till the executable isn't being used by another process.
+                  Invoke(UpdateAndRun);
+              }
         }
+
+        private void UpdateAndRun()
+        {
+            Suite.Clear();
+            UpdateTests();
+            Thread.Sleep(500);
+            Run();
+        }
+
+        
 
         public void Run()
         {
-            if(HasValidTarget) Execute("", ParseTestRun);
+            if(HasValidTarget) Execute("-v -m -k [~SEA~]", ParseTestRun);
         }
     }
 }
