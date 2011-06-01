@@ -82,10 +82,10 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="SeaTestFixture.cs" />
-    <Compile Include="SeaTestTest.cs" />
+    <Compile Include="Fixture.cs" />
+    <Compile Include="Test.cs" />
     <Compile Include="SeaTestViewModel.cs" />
-    <Compile Include="TestFailures.cs" />
+    <Compile Include="TestResult.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

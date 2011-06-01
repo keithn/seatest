@@ -1,11 +1,12 @@
+using System;
 using System.Collections.ObjectModel;
 
 namespace SeaTest
 {
-    public class SeaTestTest : Observable
+    public class Test : Observable
     {
         public string Name { get; set; }
-        public ObservableCollection<TestFailures> Results { get; set; }
+        public ObservableCollection<TestResult> Results { get; set; }
 
         private bool _passed = false;
         public bool Passed
@@ -13,5 +14,7 @@ namespace SeaTest
             get { return _passed; }
             set { _passed = value; OnPropertyChanged("Passed");}
         }
+
+        public Fixture Fixture { get; set; }
     }
 }
