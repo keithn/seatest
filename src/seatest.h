@@ -37,7 +37,7 @@ void seatest_assert_string_contains(char* expected, char* actual, const char* fu
 void seatest_assert_string_doesnt_contain(char* expected, char* actual, const char* function, unsigned int line);
 int  seatest_should_run( char* fixture, char* test);
 void seatest_before_run( char* fixture, char* test);
-void seatest_run_test(void);
+void seatest_run_test(char* fixture, char* test);
 void seatest_setup( void );
 void seatest_teardown( void );
 void seatest_suite_teardown( void );
@@ -70,7 +70,7 @@ Fixture / Test Management
 
 void fixture_setup(void (*setup)( void ));
 void fixture_teardown(void (*teardown)( void ));
-#define run_test(test) do { if(seatest_should_run(__FILE__, #test)) {seatest_suite_setup(); seatest_setup(); test(); seatest_teardown(); seatest_suite_teardown(); seatest_run_test();  }} while (0)
+#define run_test(test) do { if(seatest_should_run(__FILE__, #test)) {seatest_suite_setup(); seatest_setup(); test(); seatest_teardown(); seatest_suite_teardown(); seatest_run_test(__FILE__, #test);  }} while (0)
 #define test_fixture_start() do { seatest_test_fixture_start(__FILE__); } while (0)
 #define test_fixture_end() do { seatest_test_fixture_end();} while (0)
 void fixture_filter(char* filter);

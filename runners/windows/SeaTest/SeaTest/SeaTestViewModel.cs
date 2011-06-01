@@ -82,9 +82,7 @@ namespace SeaTest
                 }                
             }         
         }
-
         
-
         private void CaptureOutput(object sender, DataReceivedEventArgs e)
         {
             _output += e.Data +"\r\n";

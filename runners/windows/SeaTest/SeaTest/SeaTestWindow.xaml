@@ -2,6 +2,19 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="SeaTest" Height="500" Width="300">
+    <Window.Resources>
+        <Style x:Key="ListItemTestStyle" TargetType="TextBlock">
+                <!--<Setter Property="Background" Value="White">
+                    
+                </Setter>-->
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Path=Passed,Mode=OneWay}"
+                                             Value="True">
+                        <Setter Property="Background" Value="LightGreen" />
+                    </DataTrigger>
+                </Style.Triggers>
+        </Style>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -19,10 +32,10 @@
                 <DataTemplate>
                     <StackPanel>
                         <TextBlock Text="{Binding Path=Name}" />
-                        <ListBox ItemsSource="{Binding Path=Tests}">
+                        <ListBox ItemsSource="{Binding Path=Tests}" MinWidth="200">
                             <ListBox.ItemTemplate >
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding Path=Name}" />
+                                    <TextBlock Text="{Binding Path=Name}" Style="{StaticResource ListItemTestStyle}"/>
                                 </DataTemplate>
                             </ListBox.ItemTemplate >
                         </ListBox>
