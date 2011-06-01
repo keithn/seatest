@@ -3,10 +3,20 @@
 #ifdef WIN32
 #include <conio.h>
 #include "windows.h"
-#pragma warning(disable: 4996)  // retard compiler, we are not doing C++!
+int seatest_is_string_equal_i(const char* s1, const char* s2)
+{
+	#pragma warning(disable: 4996)  
+	return stricmp(s1, s2) == 0;
+}
+
 #else
+#include <strings.h>
 unsigned int GetTickCount() { return 0;}
 void _getch( void ) { }
+int seatest_is_string_equal_i(const char* s1, const char* s2)
+{
+	return strcasecmp(s1, s2) == 0;
+}
 #endif
 
 typedef enum
@@ -289,7 +299,7 @@ int seatest_commandline_has_value_after(seatest_testrunner_t* runner, int arg)
 
 int seatest_parse_commandline_option_with_value(seatest_testrunner_t* runner, int arg, char* option, seatest_void_string setter)
 {
-	if(stricmp(runner->argv[arg], option) == 0)
+	if(seatest_is_string_equal_i(runner->argv[arg], option))
 	{
 		if(!seatest_commandline_has_value_after(runner, arg))
 		{
@@ -308,13 +318,13 @@ void seatest_interpret_commandline(seatest_testrunner_t* runner)
 	int arg;
 	for(arg=0; (arg < runner->argc) && (runner->action != SEATEST_DO_ABORT); arg++)
 	{
-		if(stricmp(runner->argv[arg], "help") == 0) 
+		if(seatest_is_string_equal_i(runner->argv[arg], "help")) 
 		{
 			seatest_show_help();
 			runner->action = SEATEST_DO_NOTHING;
 			return;
 		}
-		if(stricmp(runner->argv[arg], "-d") == 0) runner->action = SEATEST_DISPLAY_TESTS;		
+		if(seatest_is_string_equal_i(runner->argv[arg], "-d")) runner->action = SEATEST_DISPLAY_TESTS;		
 		if(seatest_parse_commandline_option_with_value(runner,arg,"-t", test_filter)) arg++;
 		if(seatest_parse_commandline_option_with_value(runner,arg,"-f", fixture_filter)) arg++;		
 	}
