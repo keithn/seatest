@@ -1,8 +1,35 @@
 ﻿<Window x:Class="SeaTest.SeaTestWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Title="SeaTest" Height="300" Width="300">
+    Title="SeaTest" Height="500" Width="300">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="200" />
+        </Grid.RowDefinitions>
+        <GroupBox Header="Settings">
+            <StackPanel>
+                <TextBox Text="{Binding Path=ExecutableUnderTest,Mode=TwoWay}"/>
+                <Button Click="RunClick">Run</Button>
+            </StackPanel>
+        </GroupBox>
+        <ListBox Grid.Row="1" ItemsSource="{Binding Path=Suite}">
+            <ListBox.ItemTemplate >
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Path=Name}" />
+                        <ListBox ItemsSource="{Binding Path=Tests}">
+                            <ListBox.ItemTemplate >
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Path=Name}" />
+                                </DataTemplate>
+                            </ListBox.ItemTemplate >
+                        </ListBox>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate >
+        </ListBox>
+        <TextBlock Grid.Row="2" Height="180" Text="{Binding Path=TestOutput}" />
     </Grid>
 </Window>
