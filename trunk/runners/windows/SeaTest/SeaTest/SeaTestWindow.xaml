@@ -3,10 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="SeaTest" Height="500" Width="500">
     <Window.Resources>
-        <Style x:Key="ListItemTestStyle" TargetType="TextBlock">
-                <!--<Setter Property="Background" Value="White">
-                    
-                </Setter>-->
+        <Style x:Key="TestItemStyle" TargetType="TextBlock">               
                 <Style.Triggers>
                 <DataTrigger Binding="{Binding Path=HasRun,Mode=OneWay}"
                                              Value="True">
@@ -43,7 +40,7 @@
                         <ListBox ItemsSource="{Binding Path=Tests}" MinWidth="200">
                             <ListBox.ItemTemplate >
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding Path=Name}" Style="{StaticResource ListItemTestStyle}"/>
+                                    <TextBlock Text="{Binding Path=Name}" Style="{StaticResource TestItemStyle}"/>
                                 </DataTemplate>
                             </ListBox.ItemTemplate >
                         </ListBox>
