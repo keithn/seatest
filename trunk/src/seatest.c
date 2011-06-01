@@ -41,6 +41,7 @@ static int seatest_verbose = 0;
 static int seatest_machine_readable = 0;
 static char* seatest_current_fixture;
 static char* seatest_current_fixture_path;
+static char seatest_magic_marker[20] = "";
 
 static seatest_void_void seatest_suite_setup_func = 0;
 static seatest_void_void seatest_suite_teardown_func = 0;
@@ -107,7 +108,7 @@ void seatest_simple_test_result(int passed, char* reason, const char* function, 
 	{
 		if(seatest_machine_readable)
 		{
-			printf("%s,%s,%u,%s\r\n", seatest_current_fixture_path, function, line, reason );
+			printf("%s%s,%s,%u,%s\r\n", seatest_magic_marker, seatest_current_fixture_path, function, line, reason );
 		}
 		else
 		{
@@ -121,7 +122,7 @@ void seatest_simple_test_result(int passed, char* reason, const char* function, 
 		{
 			if(seatest_machine_readable)
 			{
-				printf("%s,%s,%u,Passed\r\n", seatest_current_fixture_path, function, line );
+				printf("%s%s,%s,%u,Passed\r\n", seatest_magic_marker, seatest_current_fixture_path, function, line );
 			}
 			else
 			{
@@ -263,6 +264,12 @@ void test_filter(char* filter)
 	seatest_test_filter = filter;
 }
 
+void set_magic_marker(char* marker)
+{
+	if(marker == NULL) return;
+	strcpy(seatest_magic_marker, marker);
+}
+
 void seatest_display_test(char* fixture_name, char* test_name)
 {
 	if(test_name == NULL) return;
@@ -322,15 +329,18 @@ int run_tests(seatest_void_void tests)
 
 void seatest_show_help( void )
 {
-	printf("Usage: [-t <testname>] [-f <fixturename>] [-d] [help] [-v] [-m]\r\n");
+	printf("Usage: [-t <testname>] [-f <fixturename>] [-d] [help] [-v] [-m] [-k <marker>\r\n");
 	printf("Flags:\r\n");
 	printf("\thelp:\twill display this help\r\n");
 	printf("\t-t:\twill only run tests that match <testname>\r\n");
 	printf("\t-f:\twill only run fixtures that match <fixturename>\r\n");
-	printf("\t-d:\twill just display test names and fixtures without running the test\r\n");
+	printf("\t-d:\twill just display test names and fixtures without\r\n");
+	printf("\t-d:\trunning the test\r\n");
 	printf("\t-v:\twill print a more verbose version of the test run\r\n");
 	printf("\t-m:\twill print a machine readable format of the test run, ie :- \r\n");
 	printf("\t   \t<textfixture>,<testname>,<linenumber>,<testresult><EOL>\r\n");
+	printf("\t-k:\twill prepend <marker> before machine readable output \r\n");
+	printf("\t   \t<marker> cannot start with a '-'\r\n");
 }
 
 
@@ -373,6 +383,7 @@ void seatest_interpret_commandline(seatest_testrunner_t* runner)
 		if(seatest_is_string_equal_i(runner->argv[arg], "-m")) seatest_machine_readable = 1;
 		if(seatest_parse_commandline_option_with_value(runner,arg,"-t", test_filter)) arg++;
 		if(seatest_parse_commandline_option_with_value(runner,arg,"-f", fixture_filter)) arg++;		
+		if(seatest_parse_commandline_option_with_value(runner,arg,"-k", set_magic_marker)) arg++;		
 	}
 }
 
