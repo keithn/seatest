@@ -3,28 +3,43 @@
 #ifdef WIN32
 #include <conio.h>
 #include "windows.h"
+#pragma warning(disable: 4996)  // retard compiler, we are not doing C++!
 #else
 unsigned int GetTickCount() { return 0;}
 void _getch( void ) { }
 #endif
 
+typedef enum
+{
+	SEATEST_DISPLAY_TESTS,
+	SEATEST_RUN_TESTS,
+	SEATEST_DO_NOTHING,
+	SEATEST_DO_ABORT
+} seatest_action_t;
+
+typedef struct
+{
+	int argc;
+	char** argv;
+	seatest_action_t action;
+} seatest_testrunner_t;
+
 static int sea_tests_run = 0;
 static int sea_tests_passed = 0;
 static int sea_tests_failed = 0;
+static int seatest_display_only = 0;
 static char* seatest_current_fixture;
 
-static void (*seatest_suite_setup_func)( void ) = 0;
-static void (*seatest_suite_teardown_func)( void ) = 0;
-static void (*seatest_fixture_setup)( void ) = 0;
-static void (*seatest_fixture_teardown)( void ) = 0;
+static seatest_void_void seatest_suite_setup_func = 0;
+static seatest_void_void seatest_suite_teardown_func = 0;
+static seatest_void_void seatest_fixture_setup = 0;
+static seatest_void_void seatest_fixture_teardown = 0;
 
-
-
-void suite_setup(void (*setup)( void ))
+void suite_setup(seatest_void_void setup)
 {
 	seatest_suite_setup_func = setup;
 }
-void suite_teardown(void (*teardown)( void ))
+void suite_teardown(seatest_void_void teardown)
 {
 	seatest_suite_teardown_func = teardown;
 }
@@ -210,6 +225,11 @@ void test_filter(char* filter)
 	seatest_test_filter = filter;
 }
 
+void seatest_display_test(char* fixture_name, char* test_name)
+{
+	if(test_name == NULL) return;
+	printf("%s,%s\r\n", fixture_name, test_name);
+}
 
 int seatest_should_run( char* fixture, char* test)
 {
@@ -218,14 +238,20 @@ int seatest_should_run( char* fixture, char* test)
 	{
 		if(strncmp(seatest_fixture_filter, fixture, strlen(seatest_fixture_filter)) != 0) run = 0;
 	}
-	if(seatest_test_filter) 
+	if(seatest_test_filter && test != NULL) 
 	{
 		if(strncmp(seatest_test_filter, test, strlen(seatest_test_filter)) != 0) run = 0;
+	}
+
+	if(run && seatest_display_only)
+	{
+		seatest_display_test(fixture, test);
+		run = 0;
 	}
 	return run;
 }
 
-int run_tests(void (*tests)(void))
+int run_tests(seatest_void_void tests)
 {
 	unsigned long end;
 	unsigned long start = GetTickCount();
@@ -246,3 +272,80 @@ int run_tests(void (*tests)(void))
 	return sea_tests_failed == 0;
 }
 
+
+void seatest_show_help( void )
+{
+	printf("Usage: [-t <testname>] [-f <fixturename>] [-d]\r\n");
+	printf("Usage: help\r\n");
+}
+
+
+int seatest_commandline_has_value_after(seatest_testrunner_t* runner, int arg)
+{
+	if(!((arg+1) < runner->argc)) return 0;
+	if(runner->argv[arg+1][0]=='-') return 0;
+	return 1;
+}
+
+int seatest_parse_commandline_option_with_value(seatest_testrunner_t* runner, int arg, char* option, seatest_void_string setter)
+{
+	if(stricmp(runner->argv[arg], option) == 0)
+	{
+		if(!seatest_commandline_has_value_after(runner, arg))
+		{
+			printf("Error: The %s option expects to be followed by a value\r\n", option);
+			runner->action = SEATEST_DO_ABORT;
+			return 0;
+		}		
+		setter(runner->argv[arg+1]);
+		return 1;
+	}
+	return 0;
+}
+
+void seatest_interpret_commandline(seatest_testrunner_t* runner) 
+{	
+	int arg;
+	for(arg=0; (arg < runner->argc) && (runner->action != SEATEST_DO_ABORT); arg++)
+	{
+		if(stricmp(runner->argv[arg], "-d") == 0) runner->action = SEATEST_DISPLAY_TESTS;		
+		if(seatest_parse_commandline_option_with_value(runner,arg,"-t", test_filter)) arg++;
+		if(seatest_parse_commandline_option_with_value(runner,arg,"-f", fixture_filter)) arg++;		
+	}
+}
+
+void seatest_testrunner_create(seatest_testrunner_t* runner, int argc, char** argv ) 
+{
+	runner->action = SEATEST_RUN_TESTS;
+	runner->argc = argc;
+	runner->argv = argv;
+	seatest_interpret_commandline(runner);
+}
+
+int seatest_testrunner(int argc, char** argv, seatest_void_void tests, seatest_void_void setup, seatest_void_void teardown)
+{
+	seatest_testrunner_t runner;
+	seatest_testrunner_create(&runner, argc, argv);	
+	switch(runner.action)
+	{
+	case SEATEST_DISPLAY_TESTS:
+		{
+			seatest_display_only = 1;
+			run_tests(tests);
+			break;
+		}
+	case SEATEST_RUN_TESTS:
+		{
+			suite_setup(setup);
+			suite_teardown(teardown);
+			return run_tests(tests);
+		}
+	case SEATEST_DO_NOTHING:
+	case SEATEST_DO_ABORT:
+	default:
+		{
+			// nothing to do, probably because there was an error which should of been already printed out.
+		}
+	}
+	return 1;
+}

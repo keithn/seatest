@@ -11,6 +11,13 @@ Defines
 #define SEATEST_PRINT_BUFFER_SIZE 100000
 
 /*
+Typedefs
+*/
+
+typedef void (*seatest_void_void)(void);
+typedef void (*seatest_void_string)(char*);
+
+/*
 Declarations
 */
 
@@ -28,7 +35,8 @@ void seatest_assert_string_ends_with(char* expected, char* actual, const char* f
 void seatest_assert_string_starts_with(char* expected, char* actual, const char* function, unsigned int line);
 void seatest_assert_string_contains(char* expected, char* actual, const char* function, unsigned int line);
 void seatest_assert_string_doesnt_contain(char* expected, char* actual, const char* function, unsigned int line);
-int seatest_should_run( char* fixture, char* test);
+int  seatest_should_run( char* fixture, char* test);
+void seatest_before_run( char* fixture, char* test);
 void seatest_run_test(void);
 void seatest_setup( void );
 void seatest_teardown( void );
@@ -67,8 +75,8 @@ void fixture_teardown(void (*teardown)( void ));
 #define test_fixture_end() do { seatest_test_fixture_end();} while (0)
 void fixture_filter(char* filter);
 void test_filter(char* filter);
-
-int run_tests(void (*tests)(void));
-void suite_teardown(void (*teardown)( void ));
-void suite_setup(void (*setup)( void ));
+void suite_teardown(seatest_void_void teardown);
+void suite_setup(seatest_void_void setup);
+int run_tests(seatest_void_void tests);
+int seatest_testrunner(int argc, char** argv, seatest_void_void tests, seatest_void_void setup, seatest_void_void teardown);
 #endif 
