@@ -1,6 +1,6 @@
 namespace SeaTest
 {
-    public class TestFailures : Observable
+    public class TestResult : Observable
     {
         public string Info { get; set; }
     }

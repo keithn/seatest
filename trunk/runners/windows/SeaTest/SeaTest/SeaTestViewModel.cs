@@ -13,11 +13,11 @@ namespace SeaTest
     public class SeaTestViewModel : Observable
     {
         private FileSystemWatcher _watcher;
-        public ObservableCollection<SeaTestFixture> Suite { get; set; }
+        public ObservableCollection<Fixture> Suite { get; set; }
 
         public SeaTestViewModel()
         {
-            Suite = new ObservableCollection<SeaTestFixture>();            
+            Suite = new ObservableCollection<Fixture>();            
             Update();          
         }
 
@@ -108,12 +108,12 @@ namespace SeaTest
             }
         }
 
-        private SeaTestFixture GetFixtureByPath(string s)
+        private Fixture GetFixtureByPath(string s)
         {
             var fixture = Suite.Where(f => f.Path == s).FirstOrDefault();
             if(fixture == null )
             {
-                fixture = new SeaTestFixture() { Path = s, Name = Path.GetFileNameWithoutExtension(s)};
+                fixture = new Fixture() { Path = s, Name = Path.GetFileNameWithoutExtension(s)};
                 Suite.Add(fixture);
             }
             return fixture;
