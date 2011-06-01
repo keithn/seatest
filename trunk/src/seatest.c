@@ -1,7 +1,6 @@
 #include "seatest.h"
 #include <string.h>
 #ifdef WIN32
-#include <conio.h>
 #include "windows.h"
 int seatest_is_string_equal_i(const char* s1, const char* s2)
 {
@@ -52,6 +51,11 @@ void suite_setup(seatest_void_void setup)
 void suite_teardown(seatest_void_void teardown)
 {
 	seatest_suite_teardown_func = teardown;
+}
+
+int seatest_is_display_only()
+{
+	return seatest_display_only;
 }
 
 void seatest_suite_setup( void )
@@ -196,6 +200,7 @@ void seatest_header_printer(char* s, int length, char f)
 	int l = strlen(s);
 	int d = (length- (l + 2)) / 2;
 	int i;
+	if(seatest_is_display_only()) return;
 	for(i = 0; i<d; i++) printf("%c",f);
 	printf(" %s ", s);
 	for(i = (d+l+2); i<length; i++) printf("%c",f);
@@ -267,6 +272,9 @@ int run_tests(seatest_void_void tests)
 	unsigned long start = GetTickCount();
 	tests();	 
 	end = GetTickCount();
+
+	if(seatest_is_display_only()) return 1;
+
 	printf("\r\n\r\n==================SEATEST v%s====================\r\n\r\n", SEATEST_VERSION);	 
 	if (sea_tests_failed > 0) {
 		printf("                      Failed\r\n");			
@@ -278,7 +286,6 @@ int run_tests(seatest_void_void tests)
 	printf("                    in %lu ms\r\n",end - start);
 	printf("==================================================\r\n");
 
-	_getch();
 	return sea_tests_failed == 0;
 }
 

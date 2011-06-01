@@ -25,5 +25,10 @@ namespace SeaTest
             Model = new SeaTestViewModel();            
             DataContext = Model;
         }
+
+        private void RunClick(object sender, RoutedEventArgs e)
+        {
+            Model.Run();
+        }
     }
 }
