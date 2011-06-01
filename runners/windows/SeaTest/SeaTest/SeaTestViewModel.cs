@@ -158,8 +158,7 @@ namespace SeaTest
         }
 
         private void UpdateAndRun()
-        {
-            Suite.Clear();
+        {            
             UpdateTests();
             Run();
         }
