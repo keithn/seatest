@@ -308,6 +308,12 @@ void seatest_interpret_commandline(seatest_testrunner_t* runner)
 	int arg;
 	for(arg=0; (arg < runner->argc) && (runner->action != SEATEST_DO_ABORT); arg++)
 	{
+		if(stricmp(runner->argv[arg], "help") == 0) 
+		{
+			seatest_show_help();
+			runner->action = SEATEST_DO_NOTHING;
+			return;
+		}
 		if(stricmp(runner->argv[arg], "-d") == 0) runner->action = SEATEST_DISPLAY_TESTS;		
 		if(seatest_parse_commandline_option_with_value(runner,arg,"-t", test_filter)) arg++;
 		if(seatest_parse_commandline_option_with_value(runner,arg,"-f", fixture_filter)) arg++;		
