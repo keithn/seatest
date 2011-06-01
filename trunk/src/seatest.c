@@ -32,12 +32,15 @@ typedef struct
 	char** argv;
 	seatest_action_t action;
 } seatest_testrunner_t;
-
+static int seatest_screen_width = 70;
 static int sea_tests_run = 0;
 static int sea_tests_passed = 0;
 static int sea_tests_failed = 0;
 static int seatest_display_only = 0;
+static int seatest_verbose = 0;
+static int seatest_machine_readable = 0;
 static char* seatest_current_fixture;
+static char* seatest_current_fixture_path;
 
 static seatest_void_void seatest_suite_setup_func = 0;
 static seatest_void_void seatest_suite_teardown_func = 0;
@@ -102,11 +105,29 @@ void seatest_simple_test_result(int passed, char* reason, const char* function, 
 {
 	if (!passed)
 	{
-		printf("%-20s Line %-5d %s\r\n", function, line, reason );
+		if(seatest_machine_readable)
+		{
+			printf("%s,%s,%u,%s\r\n", seatest_current_fixture_path, function, line, reason );
+		}
+		else
+		{
+			printf("%-30s Line %-5d %s\r\n", function, line, reason );
+		}
 		sea_tests_failed++; 
 	}
 	else
 	{
+		if(seatest_verbose)
+		{
+			if(seatest_machine_readable)
+			{
+				printf("%s,%s,%u,Passed\r\n", seatest_current_fixture_path, function, line );
+			}
+			else
+			{
+				printf("%-30s Line %-5d Passed\r\n", function, line);
+			}			
+		}
 		sea_tests_passed++; 
 	}	
 }
@@ -190,7 +211,7 @@ void seatest_assert_string_doesnt_contain(char* expected, char* actual, const ch
 	seatest_simple_test_result(strstr(actual, expected)==0, s, function, line);	
 }
 
-void seatest_run_test(void)
+void seatest_run_test(char* fixture, char* test)
 {
 	sea_tests_run++; 
 }
@@ -200,9 +221,10 @@ void seatest_header_printer(char* s, int length, char f)
 	int l = strlen(s);
 	int d = (length- (l + 2)) / 2;
 	int i;
-	if(seatest_is_display_only()) return;
+	if(seatest_is_display_only() || seatest_machine_readable) return;
 	for(i = 0; i<d; i++) printf("%c",f);
-	printf(" %s ", s);
+	if(l==0) printf("%c%c", f, f);
+	else printf(" %s ", s);
 	for(i = (d+l+2); i<length; i++) printf("%c",f);
 	printf("\r\n");
 }
@@ -210,8 +232,9 @@ void seatest_header_printer(char* s, int length, char f)
 
 void seatest_test_fixture_start(char* filepath)
 {
+	seatest_current_fixture_path = filepath;
 	seatest_current_fixture = test_file_name(filepath);
-	seatest_header_printer(seatest_current_fixture, 50, '-');
+	seatest_header_printer(seatest_current_fixture, seatest_screen_width, '-');
 	seatest_fixture_tests_failed = sea_tests_failed;
 	seatest_fixture_tests_run = sea_tests_run;
 	seatest_fixture_teardown = 0;
@@ -222,7 +245,7 @@ void seatest_test_fixture_end()
 {
 	char s[SEATEST_PRINT_BUFFER_SIZE];
 	sprintf(s, "%d run  %d failed", sea_tests_run-seatest_fixture_tests_run, sea_tests_failed-seatest_fixture_tests_failed);
-	seatest_header_printer(s, 50, ' ');
+	seatest_header_printer(s, seatest_screen_width, ' ');
 	printf("\r\n");
 }
 
@@ -270,21 +293,28 @@ int run_tests(seatest_void_void tests)
 {
 	unsigned long end;
 	unsigned long start = GetTickCount();
+	char version[40];
+	char s[40];
 	tests();	 
 	end = GetTickCount();
 
-	if(seatest_is_display_only()) return 1;
-
-	printf("\r\n\r\n==================SEATEST v%s====================\r\n\r\n", SEATEST_VERSION);	 
+	if(seatest_is_display_only() || seatest_machine_readable) return 1;
+	sprintf(version, "SEATEST v%s", SEATEST_VERSION);
+	printf("\r\n\r\n");	 
+	seatest_header_printer(version, seatest_screen_width, '=');
+	printf("\r\n");	 
 	if (sea_tests_failed > 0) {
-		printf("                      Failed\r\n");			
+		seatest_header_printer("Failed", seatest_screen_width, ' ');
 	}
 	else {
-		printf("               ALL TESTS PASSED\r\n");
+		seatest_header_printer("ALL TESTS PASSED", seatest_screen_width, ' ');
 	}
-	printf("                 %d tests run\r\n", sea_tests_run);
-	printf("                    in %lu ms\r\n",end - start);
-	printf("==================================================\r\n");
+	sprintf(s,"%d tests run", sea_tests_run);
+	seatest_header_printer(s, seatest_screen_width, ' ');
+	sprintf(s,"in %lu ms",end - start);
+	seatest_header_printer(s, seatest_screen_width, ' ');
+	printf("\r\n");	 
+	seatest_header_printer("", seatest_screen_width, '=');
 
 	return sea_tests_failed == 0;
 }
@@ -332,6 +362,8 @@ void seatest_interpret_commandline(seatest_testrunner_t* runner)
 			return;
 		}
 		if(seatest_is_string_equal_i(runner->argv[arg], "-d")) runner->action = SEATEST_DISPLAY_TESTS;		
+		if(seatest_is_string_equal_i(runner->argv[arg], "-v")) seatest_verbose = 1;
+		if(seatest_is_string_equal_i(runner->argv[arg], "-m")) seatest_machine_readable = 1;
 		if(seatest_parse_commandline_option_with_value(runner,arg,"-t", test_filter)) arg++;
 		if(seatest_parse_commandline_option_with_value(runner,arg,"-f", fixture_filter)) arg++;		
 	}
