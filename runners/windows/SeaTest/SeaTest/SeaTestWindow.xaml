@@ -19,12 +19,15 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="200" />
+            
         </Grid.RowDefinitions>
         <GroupBox Header="Settings">
             <StackPanel>
                 <TextBox Text="{Binding Path=ExecutableUnderTest,Mode=TwoWay}"/>
-                <Button Click="RunClick">Run</Button>
+                <StackPanel Orientation="Horizontal">
+                    <Button Click="RunClick">Run</Button>
+                    <CheckBox IsChecked="{Binding Path=Autorun,Mode=TwoWay}" />
+                </StackPanel>
             </StackPanel>
         </GroupBox>
         <ListBox Grid.Row="1" ItemsSource="{Binding Path=Suite}">
@@ -43,6 +46,5 @@
                 </DataTemplate>
             </ListBox.ItemTemplate >
         </ListBox>
-        <TextBlock Grid.Row="2" Height="180" Text="{Binding Path=TestOutput}" />
     </Grid>
 </Window>

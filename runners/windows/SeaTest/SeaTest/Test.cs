@@ -8,6 +8,13 @@ namespace SeaTest
         public string Name { get; set; }
         public ObservableCollection<TestResult> Results { get; set; }
 
+        private bool _hasRun;
+        public bool HasRun
+        {
+            get { return _hasRun; }
+            set { _hasRun = value; OnPropertyChanged("HasRun");}
+        }
+
         private bool _passed = false;
         public bool Passed
         {

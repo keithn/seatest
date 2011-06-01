@@ -1,9 +1,17 @@
+using System;
 using System.ComponentModel;
+using System.Windows.Threading;
 
 namespace SeaTest
 {
     public abstract class Observable : INotifyPropertyChanged
     {
+        private Dispatcher _dispatcher;
+        protected Observable()
+        {
+            _dispatcher = Dispatcher.CurrentDispatcher;
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
@@ -19,6 +27,12 @@ namespace SeaTest
         {
             OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
+
+        public void Invoke(Action a)
+        {
+            _dispatcher.Invoke(a);
+        }
+
 
     }
 }
