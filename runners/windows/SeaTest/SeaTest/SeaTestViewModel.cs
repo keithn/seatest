@@ -170,7 +170,7 @@ namespace SeaTest
                     var test = fixture.Tests.Where(t => t.Name == values[1]).FirstOrDefault();
                     if(test != null)
                     {
-                        bool passed = (values[3].Trim() == "Passed");
+                        var passed = (values[3].Trim() == "Passed");
                         test.Passed = test.HasRun ? test.Passed && passed : passed;
                         test.HasRun = true;                        
                     }
@@ -192,7 +192,7 @@ namespace SeaTest
                                Filter = filename
                            };
             _watcher.Created += ExecutableChanged;
-            //_watcher.Changed += ExecutableChanged;
+            _watcher.Changed += ExecutableChanged;
             _watcher.EnableRaisingEvents = true;
         }
 
@@ -209,7 +209,6 @@ namespace SeaTest
         {
             Suite.Clear();
             UpdateTests();
-            Thread.Sleep(500);
             Run();
         }
 
