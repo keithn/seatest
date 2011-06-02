@@ -1,9 +1,15 @@
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace SeaTest
 {
     public class Fixture : Observable
     {
+        public Fixture(List<Fixture> list) : this()
+        {
+            if(list!=null) list.Add(this);
+        }
+
         public Fixture()
         {
             Tests = new ObservableCollection<Test>();

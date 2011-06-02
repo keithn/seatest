@@ -75,43 +75,9 @@ namespace SeaTest
         private void UpdateTests()
         {
             Suite.Clear();
-            if (HasValidTarget) Execute("-d", ParseTestList);
+            if (HasValidTarget) Execute("-d", result => SeaTestParser.ParseTests(result).ForEach(Suite.Add));
         }
-
-        private void ParseTestList(string result)
-        {            
-            var lines = SplitIntoLines(result);
-            foreach(var test in lines)
-            {
-                var entry = SplitCommaSepatedValues(test);
-                if(entry.Length == 2)
-                {
-                    var fixture = GetFixtureByPath(entry[0]);
-                    fixture.AddTest(entry[1]);
-                }
-            }
-        }
-
-        private static string[] SplitCommaSepatedValues(string s)
-        {
-            return s.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
-        }
-
-        private static string[] SplitIntoLines(string s)
-        {
-            return s.Split(new []{'\r','\n'}, StringSplitOptions.RemoveEmptyEntries);
-        }
-
-        private Fixture GetFixtureByPath(string s)
-        {
-            var fixture = Suite.Where(f => f.Path == s).FirstOrDefault();
-            if(fixture == null )
-            {
-                fixture = new Fixture { Path = s, Name = Path.GetFileNameWithoutExtension(s)};
-                Suite.Add(fixture);
-            }
-            return fixture;
-        }
+        
 
         private string _testOutput;
         public string TestOutput
@@ -120,25 +86,7 @@ namespace SeaTest
             set { _testOutput = value; OnPropertyChanged("TestOutput");}
         }
         
-        private void ParseTestRun(string result)
-        {
-            var lines = SplitIntoLines(result).Where(l => l.StartsWith("[~SEA~]")).Select(l => l.Remove(0, 7)).ToList();
-            foreach(var testResultLine in lines)
-            {
-                var values = SplitCommaSepatedValues(testResultLine);
-                if(values.Length == 4)
-                {
-                    var fixture = GetFixtureByPath(values[0]);
-                    var test = fixture.Tests.Where(t => t.Name == values[1]).FirstOrDefault();
-                    if(test != null)
-                    {
-                        var passed = (values[3].Trim() == "Passed");
-                        test.Passed = test.HasRun ? test.Passed && passed : passed;
-                        test.HasRun = true;                        
-                    }
-                }
-            }
-        }
+        
 
         private void MonitorTarget()
         {
@@ -166,7 +114,7 @@ namespace SeaTest
         
         public void Run()
         {
-            if(HasValidTarget) Execute("-v -m -k [~SEA~]", ParseTestRun);
+            if(HasValidTarget) Execute("-v -m -k [~SEA~]", result => SeaTestParser.ParseTestRun(result, Suite));
         }
     }
 }

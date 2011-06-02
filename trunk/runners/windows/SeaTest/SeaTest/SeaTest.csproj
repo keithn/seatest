@@ -84,6 +84,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Fixture.cs" />
+    <Compile Include="SeaTestParser.cs" />
     <Compile Include="Test.cs" />
     <Compile Include="SeaTestViewModel.cs" />
     <Compile Include="TestResult.cs" />
