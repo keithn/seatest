@@ -28,7 +28,7 @@ namespace SeaTest
 
         private void RunClick(object sender, RoutedEventArgs e)
         {
-            Model.Run();
+            Model.UpdateAndRun();
         }
     }
 }
