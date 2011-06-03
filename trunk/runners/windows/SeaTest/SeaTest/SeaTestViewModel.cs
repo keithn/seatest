@@ -42,7 +42,14 @@ namespace SeaTest
         private void Update()
         {
             MonitorTarget();
-            UpdateTests();
+            if(Autorun)
+            {
+                UpdateAndRun();
+            }
+            else
+            {
+                UpdateTests();    
+            }            
         }
 
         private bool HasValidTarget
@@ -105,7 +112,7 @@ namespace SeaTest
               }
         }
 
-        private void UpdateAndRun()
+        public void UpdateAndRun()
         {            
             UpdateTests();
             Run();
