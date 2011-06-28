@@ -1,0 +1,17 @@
+CFLAGS = @CFLAGS@ @DEFS@
+CC = @CC@
+MKDIR_P = @MKDIR_P@
+
+SEATEST_TESTS = src/seatest.c src/seatest_tests.c
+
+RM_F = rm -f
+
+all: clean seatest_tests
+
+seatest_tests:
+	$(MKDIR_P) bin
+	$(CC) $(SEATEST_TESTS) $(CFLAGS) -o bin/seatest_tests
+	bin/seatest_tests
+
+clean:
+	$(RM_F) src/*.o
