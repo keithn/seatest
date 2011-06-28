@@ -1,4 +1,4 @@
-#include "seatest.h"
+#include "../src/seatest.h"
 
 int main( int argc, char** argv )
 {

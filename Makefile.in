@@ -2,7 +2,7 @@ CFLAGS = @CFLAGS@ @DEFS@
 CC = @CC@
 MKDIR_P = @MKDIR_P@
 
-SEATEST_TESTS = src/seatest.c src/seatest_tests.c
+SEATEST_TESTS = src/seatest.c tests/seatest_tests.c
 
 RM_F = rm -f
 
