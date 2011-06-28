@@ -417,7 +417,7 @@ int seatest_testrunner(int argc, char** argv, seatest_void_void tests, seatest_v
 	case SEATEST_DO_ABORT:
 	default:
 		{
-			// nothing to do, probably because there was an error which should of been already printed out.
+			/* nothing to do, probably because there was an error which should of been already printed out. */
 		}
 	}
 	return 1;
