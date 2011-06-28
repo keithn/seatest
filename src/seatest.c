@@ -422,3 +422,19 @@ int seatest_testrunner(int argc, char** argv, seatest_void_void tests, seatest_v
 	}
 	return 1;
 }
+
+int seatest_get_tests_passed()
+{
+  return sea_tests_passed; 
+}
+
+int seatest_get_tests_failed()
+{
+  return sea_tests_failed;
+}
+
+void seatest_reset_count()
+{
+  sea_tests_passed = 0;
+  sea_tests_failed = 0;
+}
