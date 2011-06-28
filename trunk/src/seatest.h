@@ -79,4 +79,10 @@ void suite_teardown(seatest_void_void teardown);
 void suite_setup(seatest_void_void setup);
 int run_tests(seatest_void_void tests);
 int seatest_testrunner(int argc, char** argv, seatest_void_void tests, seatest_void_void setup, seatest_void_void teardown);
-#endif 
+#endif
+
+#ifdef SEATEST_INTERNAL_TESTS 
+int seatest_get_tests_passed();
+int seatest_get_tests_failed();
+void seatest_reset_count();
+#endif
