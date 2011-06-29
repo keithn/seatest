@@ -21,10 +21,19 @@ void test_assert_true()
   assert_int_equal(0, seatest_get_tests_failed());
 }
 
+void test_assert_false()
+{
+  seatest_reset_count();
+  assert_false(0);
+  assert_int_equal(1, seatest_get_tests_passed());
+  assert_int_equal(0, seatest_get_tests_failed());
+}
+
 void test_fixture_seatest(void)
 {
   test_fixture_start();      
   run_test(test_assert_true);   
+  run_test(test_assert_false);   
   test_fixture_end();       
 }
 
