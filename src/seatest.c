@@ -18,6 +18,11 @@ int seatest_is_string_equal_i(const char* s1, const char* s2)
 }
 #endif
 
+#ifdef SEATEST_INTERNAL_TESTS
+static int sea_test_last_passed = 0;
+#endif
+
+
 typedef enum
 {
 	SEATEST_DISPLAY_TESTS,
@@ -47,6 +52,8 @@ static seatest_void_void seatest_suite_setup_func = 0;
 static seatest_void_void seatest_suite_teardown_func = 0;
 static seatest_void_void seatest_fixture_setup = 0;
 static seatest_void_void seatest_fixture_teardown = 0;
+
+void (*seatest_simple_test_result)(int passed, char* reason, const char* function, unsigned int line) = seatest_simple_test_result_log;
 
 void suite_setup(seatest_void_void setup)
 {
@@ -102,10 +109,11 @@ char* test_file_name(char* path)
 static int seatest_fixture_tests_run;
 static int seatest_fixture_tests_failed;
 
-void seatest_simple_test_result(int passed, char* reason, const char* function, unsigned int line)
+void seatest_simple_test_result_log(int passed, char* reason, const char* function, unsigned int line)
 {
 	if (!passed)
 	{
+	
 		if(seatest_machine_readable)
 		{
 			printf("%s%s,%s,%u,%s\r\n", seatest_magic_marker, seatest_current_fixture_path, function, line, reason );
@@ -114,7 +122,7 @@ void seatest_simple_test_result(int passed, char* reason, const char* function, 
 		{
 			printf("%-30s Line %-5d %s\r\n", function, line, reason );
 		}
-		sea_tests_failed++; 
+		sea_tests_failed++;
 	}
 	else
 	{
@@ -129,7 +137,7 @@ void seatest_simple_test_result(int passed, char* reason, const char* function, 
 				printf("%-30s Line %-5d Passed\r\n", function, line);
 			}			
 		}
-		sea_tests_passed++; 
+		sea_tests_passed++;
 	}	
 }
 
@@ -423,18 +431,29 @@ int seatest_testrunner(int argc, char** argv, seatest_void_void tests, seatest_v
 	return 1;
 }
 
-int seatest_get_tests_passed()
+#ifdef SEATEST_INTERNAL_TESTS 
+void seatest_simple_test_result_nolog(int passed, char* reason, const char* function, unsigned int line)
 {
-  return sea_tests_passed; 
+  sea_test_last_passed = passed;  
 }
 
-int seatest_get_tests_failed()
+void seatest_assert_last_passed()
 {
-  return sea_tests_failed;
+  assert_int_equal(1, sea_test_last_passed);
 }
 
-void seatest_reset_count()
+void seatest_assert_last_failed()
 {
-  sea_tests_passed = 0;
-  sea_tests_failed = 0;
+  assert_int_equal(0, sea_test_last_passed);
 }
+
+void seatest_disable_logging()
+{
+  seatest_simple_test_result = seatest_simple_test_result_nolog;
+}
+
+void seatest_enable_logging()
+{
+  seatest_simple_test_result = seatest_simple_test_result_log;
+}
+#endif
