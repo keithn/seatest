@@ -23,7 +23,7 @@ Declarations
 
 void seatest_test_fixture_start(char* filepath);
 void seatest_test_fixture_end( void );
-void seatest_simple_test_result(int passed, char* reason, const char* function, unsigned int line);
+void seatest_simple_test_result_log(int passed, char* reason, const char* function, unsigned int line);
 void seatest_assert_true(int test, const char* function, unsigned int line);
 void seatest_assert_false(int test, const char* function, unsigned int line);
 void seatest_assert_int_equal(int expected, int actual, const char* function, unsigned int line);
@@ -82,7 +82,9 @@ int seatest_testrunner(int argc, char** argv, seatest_void_void tests, seatest_v
 #endif
 
 #ifdef SEATEST_INTERNAL_TESTS 
-int seatest_get_tests_passed();
-int seatest_get_tests_failed();
-void seatest_reset_count();
+void seatest_simple_test_result_nolog(int passed, char* reason, const char* function, unsigned int line);
+void seatest_assert_last_passed();
+void seatest_assert_last_failed();
+void seatest_enable_logging();
+void seatest_disable_logging();
 #endif
