@@ -48,7 +48,6 @@ void test_fixture_seatest(void)
   run_test(test_assert_int_equal);
   run_test(test_assert_ulong_equal);
   run_test(test_assert_string_equal);
-  run_test(test_assert_n_array_equal);
   test_fixture_end();       
 }
 
