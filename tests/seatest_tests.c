@@ -1,5 +1,17 @@
 #include "seatest_tests.h"
 
+void test_assert_string_equal()
+{
+  assert_test_passes(assert_string_equal((char *)0, (char *)0));
+  assert_test_passes(assert_string_equal("", ""));
+  assert_test_passes(assert_string_equal("foo", "foo"));
+  assert_test_fails(assert_string_equal((char *)0, "bar"));
+  assert_test_fails(assert_string_equal("foo", (char *)0));
+  assert_test_fails(assert_string_equal("foo", "bar"));
+  assert_test_fails(assert_string_equal("foo", "Foo"));
+  assert_test_fails(assert_string_equal("foo", "foo\n"));
+}
+
 void test_assert_ulong_equal()
 {
   assert_test_passes(assert_ulong_equal(1, 1));
@@ -35,6 +47,8 @@ void test_fixture_seatest(void)
   run_test(test_assert_false);
   run_test(test_assert_int_equal);
   run_test(test_assert_ulong_equal);
+  run_test(test_assert_string_equal);
+  run_test(test_assert_n_array_equal);
   test_fixture_end();       
 }
 

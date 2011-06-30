@@ -187,9 +187,31 @@ void seatest_assert_double_equal( double expected, double actual, double delta, 
 
 void seatest_assert_string_equal(char* expected, char* actual, const char* function, unsigned int line)
 {
+        int comparison;
 	char s[SEATEST_PRINT_BUFFER_SIZE];
-	sprintf(s, "Expected %s but was %s", expected, actual);
-	seatest_simple_test_result(strcmp(expected, actual)==0, s, function, line);	
+	
+	if ((expected == (char *)0) && (actual == (char *)0))
+	{
+          sprintf(s, "Expected <NULL> but was <NULL>");
+	  comparison = 1;
+	}
+        else if ((expected == (char *)0))
+	{
+	  sprintf(s, "Expected <NULL> but was %s", actual);
+	  comparison = 0;
+	}
+        else if ((actual == (char *)0))
+	{
+	  sprintf(s, "Expected %s but was <NULL>", expected);
+	  comparison = 0;
+	}
+	else
+	{
+	  comparison = strcmp(expected, actual) == 0;
+	  sprintf(s, "Expected %s but was %s", expected, actual);	
+	}
+
+	seatest_simple_test_result(comparison, s, function, line);	
 }
 
 void seatest_assert_string_ends_with(char* expected, char* actual, const char* function, unsigned int line)
