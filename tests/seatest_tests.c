@@ -1,5 +1,18 @@
 #include "seatest_tests.h"
 
+void test_assert_n_array_equal()
+{
+  int array_1[4] = { 0, 1, 2, 3 };
+  int array_2[4] = { 0, 1, 2, 4 };
+  int array_3[4] = { 0, 1, 2, 3 };
+
+  assert_test_passes(assert_n_array_equal(array_1, array_1, 4));
+  assert_test_passes(assert_n_array_equal(array_1, array_3, 4));
+  assert_test_passes(assert_n_array_equal(array_1, array_2, 3));
+  assert_test_fails(assert_n_array_equal(array_1, array_2, 4));
+  assert_test_fails(assert_n_array_equal(array_1, array_2, 0));
+}
+
 void test_assert_string_equal()
 {
   assert_test_passes(assert_string_equal((char *)0, (char *)0));
@@ -48,6 +61,7 @@ void test_fixture_seatest(void)
   run_test(test_assert_int_equal);
   run_test(test_assert_ulong_equal);
   run_test(test_assert_string_equal);
+  run_test(test_assert_n_array_equal);
   test_fixture_end();       
 }
 
