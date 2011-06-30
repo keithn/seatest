@@ -45,6 +45,5 @@ void all_tests(void)
 
 int main(int argc, char** argv)
 {
-  run_tests(all_tests);   
-  return 0;
+  return run_tests(all_tests) ? 0 : 1;
 }
