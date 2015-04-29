@@ -19,22 +19,22 @@ If you have experience with other xUnit type frameworks, you may wish to read th
 - Cross platform
 
 ## Asserts
-assert_true
-assert_false
-assert_int_equal
-assert_ulong_equal
-assert_string_equal
-assert_n_array_equal
-assert_bit_set
-assert_bit_not_set
-assert_bit_mask_matches
-assert_fail
-assert_float_equal
-assert_double_equal
-assert_string_contains
-assert_string_doesnt_contain
-assert_string_starts_with
-assert_string_ends_with
+- assert_true
+- assert_false
+- assert_int_equal
+- assert_ulong_equal
+- assert_string_equal
+- assert_n_array_equal
+- assert_bit_set
+- assert_bit_not_set
+- assert_bit_mask_matches
+- assert_fail
+- assert_float_equal
+- assert_double_equal
+- assert_string_contains
+- assert_string_doesnt_contain
+- assert_string_starts_with
+- assert_string_ends_with
 
 ## Seatest Hello World
 ```C
