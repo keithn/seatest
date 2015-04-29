@@ -33,6 +33,7 @@ assert_string_doesnt_contain
 assert_string_starts_with
 assert_string_ends_with
 Seatest Hello World
+```C
 #include "seatest.h"
 //
 // create a test...
@@ -72,6 +73,7 @@ int main( int argc, char** argv )
 {
         return run_tests(all_tests);
 }
+```
 Fixtures
 In many xUnit style testing frameworks, tests and testfixtures are automatically discovered. So all you do is write your test, or fixture, and they are automatically run. Which is great! You never forget to include a test. However in C, there is no language mechanism to do this. (Some of the C unit testing frameworks make use of something like python to find the tests automatically)
 
