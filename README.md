@@ -7,16 +7,16 @@ If you are new to TDD / Unit Testing, you may wish to jump straight to Getting S
 If you have experience with other xUnit type frameworks, you may wish to read through the general technical overview of SeaTest?
 
 ## Features
-xUnit style asserts
-Fixtures
-Setup / Teardown
-Global Setup / Teardown
-Ability to selectively run Tests / Fixtures
-Testing framework contained in one .h and one .c
-Easily extensible for custom asserts
-No memory allocation used!
-Simple Syntax with no CRUFT
-Cross platform
+- xUnit style asserts
+- Fixtures
+- Setup / Teardown
+- Global Setup / Teardown
+- Ability to selectively run Tests / Fixtures
+- Testing framework contained in one .h and one .c
+- Easily extensible for custom asserts
+- No memory allocation used!
+- Simple Syntax with no CRUFT
+- Cross platform
 
 ## Asserts
 assert_true
