@@ -1,10 +1,12 @@
+#Seatest
+
 A simple unit testing framework for C based on the xUnit style of unit testing. Ideal for Test Driven Development ( TDD ). Designed to be portable.
 
 If you are new to TDD / Unit Testing, you may wish to jump straight to Getting Started.
 
 If you have experience with other xUnit type frameworks, you may wish to read through the general technical overview of SeaTest?
 
-Features
+## Features
 xUnit style asserts
 Fixtures
 Setup / Teardown
@@ -15,7 +17,8 @@ Easily extensible for custom asserts
 No memory allocation used!
 Simple Syntax with no CRUFT
 Cross platform
-Asserts
+
+## Asserts
 assert_true
 assert_false
 assert_int_equal
@@ -32,7 +35,8 @@ assert_string_contains
 assert_string_doesnt_contain
 assert_string_starts_with
 assert_string_ends_with
-Seatest Hello World
+
+## Seatest Hello World
 ```C
 #include "seatest.h"
 //
@@ -74,7 +78,8 @@ int main( int argc, char** argv )
         return run_tests(all_tests);
 }
 ```
-Fixtures
+
+## Fixtures
 In many xUnit style testing frameworks, tests and testfixtures are automatically discovered. So all you do is write your test, or fixture, and they are automatically run. Which is great! You never forget to include a test. However in C, there is no language mechanism to do this. (Some of the C unit testing frameworks make use of something like python to find the tests automatically)
 
 So Seatest requires you to explicitly register all your tests and fixtures. If you are in the habit of "red green refactor", this limitation shouldn't be too much of a problem. The main reason for this is that the framework needs to be easily used in embedded environments / compilers / IDEs. The current prime target being PICs and the MPLAB IDE. So things are kept to pretty vanilla C code.
@@ -84,7 +89,7 @@ SeaTest? was built to support embedded development using a dual compiler approac
 One of the big factors was to make sure seatest didn't use any dynamic memory allocation (like malloc, etc). Or store a big list of tests in some sturcture. All the test fixtures and tests are created through the structure of the code itself. Making it simple, quick, and very straightforward.
 
 The general approach to fixtures generally looks like the following :-
-
+```C
 void my_test_fixture()
 {
         test_fixture_start();   
@@ -96,10 +101,12 @@ void my_test_fixture()
         
         test_fixture_end();
 }
-Getting Started
+```
+
+## Getting Started
 Note, this section is currently getting built up and might seem a bit incomplete at times . It needs building into a full tutorial and a description on how to do embedded C unit testing
 
-1. Download the source code ( either in Downloads, or direct from the subversion repository)
+1. Download the source code 
 
 2) include "seatest.c" and "seatest.h" in your project, make sure the .h is in a directory your compiler will find when including headers.
 
@@ -113,10 +120,10 @@ Note, this section is currently getting built up and might seem a bit incomplete
 
 7) Run
 
-Examples
+## Examples
 In the download zip there is an examples folder that shows a typical setup of multiple test fixtures with setups and teardowns, a test suite with global setup/teardown. It also shows the use of a number of the assert macros.
 
-Roadmap
+## Roadmap
 Currently Being worked on
 Ensuring seatest builds on multiple platforms beyond Windows and Linux
 GUI Test Runner for windows
