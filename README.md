@@ -25,7 +25,6 @@ If you have experience with other xUnit type frameworks, you may wish to read th
 - assert_ulong_equal
 - assert_string_equal
 - assert_n_array_equal
-- assert_n_unsigned_array_equal
 - assert_bit_set
 - assert_bit_not_set
 - assert_bit_mask_matches
