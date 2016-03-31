@@ -22,6 +22,9 @@ int seatest_is_string_equal_i(const char* s1, const char* s2)
 static int sea_test_last_passed = 0;
 #endif
 
+#define SEATEST_RET_ERROR								(-1)
+#define SEATEST_RET_OK									0
+#define SEATEST_RET_FAILED_COUNT(tests_failed_count)	(tests_failed_count)
 
 typedef enum
 {
@@ -43,6 +46,7 @@ static int sea_tests_passed = 0;
 static int sea_tests_failed = 0;
 static int seatest_display_only = 0;
 static int seatest_verbose = 0;
+static int vs_mode = 0;
 static int seatest_machine_readable = 0;
 static char* seatest_current_fixture;
 static char* seatest_current_fixture_path;
@@ -109,6 +113,7 @@ char* test_file_name(char* path)
 static int seatest_fixture_tests_run;
 static int seatest_fixture_tests_failed;
 
+
 void seatest_simple_test_result_log(int passed, char* reason, const char* function, unsigned int line)
 {
 	if (!passed)
@@ -116,11 +121,26 @@ void seatest_simple_test_result_log(int passed, char* reason, const char* functi
 	
 		if(seatest_machine_readable)
 		{
-			printf("%s%s,%s,%u,%s\r\n", seatest_magic_marker, seatest_current_fixture_path, function, line, reason );
+			if (vs_mode)
+			{
+				printf("%s (%u)		%s,%s\r\n", seatest_current_fixture_path, line, function, reason );
+			}
+			else
+			{
+				printf("%s%s,%s,%u,%s\r\n", seatest_magic_marker, seatest_current_fixture_path, function, line, reason );
+			}
+			
 		}
 		else
-		{
-			printf("%-30s Line %-5d %s\r\n", function, line, reason );
+		{	
+			if ( vs_mode )
+			{
+				printf("%s (%u)		%s,%s\r\n", seatest_current_fixture_path, line, function, reason );
+			}
+			else
+			{
+				printf("%-30s Line %-5d %s\r\n", function, line, reason );
+			}
 		}
 		sea_tests_failed++;
 	}
@@ -335,7 +355,7 @@ int run_tests(seatest_void_void tests)
 	tests();	 
 	end = GetTickCount();
 
-	if(seatest_is_display_only() || seatest_machine_readable) return 1;
+	if(seatest_is_display_only() || seatest_machine_readable) return SEATEST_RET_OK;
 	sprintf(version, "SEATEST v%s", SEATEST_VERSION);
 	printf("\r\n\r\n");	 
 	seatest_header_printer(version, seatest_screen_width, '=');
@@ -353,7 +373,7 @@ int run_tests(seatest_void_void tests)
 	printf("\r\n");	 
 	seatest_header_printer("", seatest_screen_width, '=');
 
-	return sea_tests_failed == 0;
+	return SEATEST_RET_FAILED_COUNT(sea_tests_failed);
 }
 
 
@@ -410,6 +430,7 @@ void seatest_interpret_commandline(seatest_testrunner_t* runner)
 		}
 		if(seatest_is_string_equal_i(runner->argv[arg], "-d")) runner->action = SEATEST_DISPLAY_TESTS;		
 		if(seatest_is_string_equal_i(runner->argv[arg], "-v")) seatest_verbose = 1;
+		if(seatest_is_string_equal_i(runner->argv[arg], "-vs")) vs_mode = 1;
 		if(seatest_is_string_equal_i(runner->argv[arg], "-m")) seatest_machine_readable = 1;
 		if(seatest_parse_commandline_option_with_value(runner,arg,"-t", test_filter)) arg++;
 		if(seatest_parse_commandline_option_with_value(runner,arg,"-f", fixture_filter)) arg++;		
@@ -435,22 +456,27 @@ int seatest_testrunner(int argc, char** argv, seatest_void_void tests, seatest_v
 		{
 			seatest_display_only = 1;
 			run_tests(tests);
-			break;
+			return SEATEST_RET_OK;
 		}
 	case SEATEST_RUN_TESTS:
 		{
+			seatest_display_only = 0;
 			suite_setup(setup);
 			suite_teardown(teardown);
 			return run_tests(tests);
 		}
 	case SEATEST_DO_NOTHING:
+		{
+			return SEATEST_RET_OK;
+		}
 	case SEATEST_DO_ABORT:
 	default:
 		{
-			/* nothing to do, probably because there was an error which should of been already printed out. */
+			/* there was an error which should of been already printed out. */
+			return SEATEST_RET_ERROR;
 		}
 	}
-	return 1;
+	return SEATEST_RET_ERROR;
 }
 
 #ifdef SEATEST_INTERNAL_TESTS 
