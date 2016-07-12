@@ -10,6 +10,12 @@ Defines
 #define SEATEST_PROJECT_HOME "http://code.google.com/p/seatest/"
 #define SEATEST_PRINT_BUFFER_SIZE 100000
 
+#ifdef ABORT_TEST_IF_ASSERT_FAIL
+#include <setjmp.h>
+jmp_buf env;
+int skip_failed_test;
+#endif
+
 /*
 Typedefs
 */
