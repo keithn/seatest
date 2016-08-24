@@ -120,7 +120,7 @@ Note, this section is currently getting built up and might seem a bit incomplete
 
 7) Run
 ## Abort if assert
-Seatest continue running the fixture if assert inside is failed. Sometimes, user want to break fixture after failed assert. For example. User can build tests with ABORT_TEST_IF_ASSERT_FAIL flag (use -D).
+Seatest continue running the fixture if assert inside is failed. Sometimes, user want to break fixture after failed assert. User can build tests with ABORT_TEST_IF_ASSERT_FAIL flag (use -D).
 
 ## Examples
 In the download zip there is an examples folder that shows a typical setup of multiple test fixtures with setups and teardowns, a test suite with global setup/teardown. It also shows the use of a number of the assert macros.
