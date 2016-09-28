@@ -297,6 +297,7 @@ void seatest_test_fixture_end()
 	char s[SEATEST_PRINT_BUFFER_SIZE];
 	sprintf(s, "%d run  %d failed", sea_tests_run-seatest_fixture_tests_run, sea_tests_failed-seatest_fixture_tests_failed);
 	seatest_header_printer(s, seatest_screen_width, ' ');
+	if(seatest_is_display_only() || seatest_machine_readable) return;
 	printf("\r\n");
 }
 
