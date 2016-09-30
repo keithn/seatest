@@ -118,7 +118,7 @@ void seatest_simple_test_result_log(int passed, char* reason, const char* functi
 {
 	if (!passed)
 	{
-	
+
 		if(seatest_machine_readable)
 		{
 			if (vs_mode)
@@ -143,6 +143,11 @@ void seatest_simple_test_result_log(int passed, char* reason, const char* functi
 			}
 		}
 		sea_tests_failed++;
+
+		#ifdef ABORT_TEST_IF_ASSERT_FAIL
+		printf("Test has been finished with failure.\r\n");
+		longjmp(env,1);
+		#endif
 	}
 	else
 	{
@@ -329,6 +334,11 @@ void seatest_display_test(char* fixture_name, char* test_name)
 int seatest_should_run( char* fixture, char* test)
 {
 	int run = 1;
+
+	#ifdef ABORT_TEST_IF_ASSERT_FAIL
+	skip_failed_test = setjmp(env);
+	#endif
+
 	if(seatest_fixture_filter) 
 	{
 		if(strncmp(seatest_fixture_filter, fixture, strlen(seatest_fixture_filter)) != 0) run = 0;
@@ -340,7 +350,14 @@ int seatest_should_run( char* fixture, char* test)
 
 	if(run && seatest_display_only)
 	{
+		#ifdef ABORT_TEST_IF_ASSERT_FAIL
+		if(!skip_failed_test)
+		{
+			seatest_display_test(fixture, test);	
+		}
+		#else
 		seatest_display_test(fixture, test);
+		#endif
 		run = 0;
 	}
 	return run;
