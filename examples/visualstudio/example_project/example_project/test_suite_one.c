@@ -1,12 +1,15 @@
 #include "seatest.h"
 
-void test_strings_equal()
+void test_strings_equal( void )
 {
 	char *s = "hello";
+	assert_true(0);
+	assert_true(0);
+
 	assert_string_equal("hello", s);
 }
 
-void test_arrays_equal()
+void test_arrays_equal( void )
 {
 	unsigned char expected_bytes[] = { 1, 2, 3};
 	unsigned char buffer[5];
@@ -19,14 +22,14 @@ void test_arrays_equal()
 	assert_n_array_equal(expected_bytes, buffer, 3);
 }
 
-void test_bits()
+void test_bits( void)
 {
 	assert_bit_set(0, 0x01);
 	assert_bit_set(2, 0x04);
 	assert_bit_not_set(3, 0x02);	
 }
 
-void test_strings()
+void test_strings( void )
 {
 	char *s = "hello";
 	assert_string_equal("hello", s);
@@ -39,9 +42,10 @@ void test_strings()
 
 void test_fixture_one( void )
 {
-	test_fixture_start();               // starts a fixture
-	run_test(test_strings);   // run tests
-	run_test(test_arrays_equal);
+	test_fixture_start();        
+	run_test(test_arrays_equal); 
+	run_test(test_strings);  	
+	run_test(test_strings_equal);  	
 	run_test(test_bits);
-	test_fixture_end();                 // ends a fixture
+	test_fixture_end();          
 }

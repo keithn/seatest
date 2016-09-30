@@ -335,10 +335,6 @@ int seatest_should_run( char* fixture, char* test)
 {
 	int run = 1;
 
-	#ifdef ABORT_TEST_IF_ASSERT_FAIL
-	skip_failed_test = setjmp(env);
-	#endif
-
 	if(seatest_fixture_filter) 
 	{
 		if(strncmp(seatest_fixture_filter, fixture, strlen(seatest_fixture_filter)) != 0) run = 0;
@@ -349,18 +345,28 @@ int seatest_should_run( char* fixture, char* test)
 	}
 
 	if(run && seatest_display_only)
-	{
-		#ifdef ABORT_TEST_IF_ASSERT_FAIL
-		if(!skip_failed_test)
-		{
-			seatest_display_test(fixture, test);	
-		}
-		#else
-		seatest_display_test(fixture, test);
-		#endif
+	{		
+		seatest_display_test(fixture, test);		
 		run = 0;
 	}
 	return run;
+}
+
+void seatest_test(char* fixture, char* test, void (*test_function)(void))
+{
+	seatest_suite_setup(); 
+	seatest_setup(); 
+
+#ifdef ABORT_TEST_IF_ASSERT_FAIL
+	skip_failed_test = setjmp(env);
+	if(!skip_failed_test) test_function();
+#else
+	test_function();
+#endif
+
+	seatest_teardown();
+	seatest_suite_teardown();
+	seatest_run_test(fixture, test);
 }
 
 int run_tests(seatest_void_void tests)
