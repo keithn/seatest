@@ -119,8 +119,8 @@ Note, this section is currently getting built up and might seem a bit incomplete
 6) Create tests
 
 7) Run
-## Abort if assert
-Seatest continue running the fixture if assert inside is failed. Sometimes, user want to break fixture after failed assert. User can build tests with ABORT_TEST_IF_ASSERT_FAIL flag (use -D).
+## Abort test on first test failure
+Normally Seatest will run all asserts in a test no matter whether they pass or fail. If you want the test to abort on the first failure then set the #define ABORT_TEST_IF_ASSERT_FAIL.
 
 ## Examples
 In the download zip there is an examples folder that shows a typical setup of multiple test fixtures with setups and teardowns, a test suite with global setup/teardown. It also shows the use of a number of the assert macros.
