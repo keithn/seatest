@@ -122,12 +122,4 @@ Note, this section is currently getting built up and might seem a bit incomplete
 ## Abort test on first test failure
 Normally Seatest will run all asserts in a test no matter whether they pass or fail. If you want the test to abort on the first failure then set the #define ABORT_TEST_IF_ASSERT_FAIL.
 
-## Examples
-In the download zip there is an examples folder that shows a typical setup of multiple test fixtures with setups and teardowns, a test suite with global setup/teardown. It also shows the use of a number of the assert macros.
 
-## Roadmap
-Currently Being worked on
-Ensuring seatest builds on multiple platforms beyond Windows and Linux
-GUI Test Runner for windows
-Beyond the next release
-Auto Test suite generation
