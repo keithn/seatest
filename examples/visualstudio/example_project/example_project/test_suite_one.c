@@ -3,9 +3,6 @@
 void test_strings_equal( void )
 {
 	char *s = "hello";
-	assert_true(0);
-	assert_true(0);
-
 	assert_string_equal("hello", s);
 }
 
