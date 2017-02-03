@@ -18,6 +18,15 @@ int seatest_is_string_equal_i(const char* s1, const char* s2)
 }
 #endif
 
+#if _POSIX_C_SOURCE >= 199309L
+#include <time.h>
+unsigned long ts_to_ms(const struct timespec *ts)
+{
+	unsigned long ns = ((unsigned long) ts->tv_sec) * 1e9 + ts->tv_nsec;
+	return ns / 1e6;
+}
+#endif
+
 #ifdef SEATEST_INTERNAL_TESTS
 static int sea_test_last_passed = 0;
 #endif
@@ -376,8 +385,28 @@ int run_tests(seatest_void_void tests)
 	unsigned long start = GetTickCount();
 	char version[40];
 	char s[40];
-	tests();	 
+
+#if _POSIX_C_SOURCE >= 199309L
+	struct timespec start_ts = {0};
+	if (clock_gettime(CLOCK_MONOTONIC, &start_ts) == -1) {
+		start_ts.tv_sec = 0;
+		start_ts.tv_nsec = 0;
+	}
+	start = ts_to_ms(&start_ts);
+#endif
+
+	tests();
+
+#if _POSIX_C_SOURCE >= 199309L
+	struct timespec end_ts = {0};
+	if (clock_gettime(CLOCK_MONOTONIC, &end_ts) == -1) {
+		end_ts.tv_sec = 0;
+		end_ts.tv_nsec = 0;
+	}
+	end = ts_to_ms(&end_ts);
+#else
 	end = GetTickCount();
+#endif
 
 	if(seatest_is_display_only() || seatest_machine_readable) return SEATEST_RET_OK;
 	sprintf(version, "SEATEST v%s", SEATEST_VERSION);
