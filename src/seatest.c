@@ -224,18 +224,18 @@ void seatest_assert_string_equal(char* expected, char* actual, const char* funct
 	}
 		else if (expected == (char *)0)
 	{
-		sprintf(s, "Expected <NULL> but was %s", actual);
+		sprintf(s, "Expected <NULL> but was \"%s\"", actual);
 		comparison = 0;
 	}
 		else if (actual == (char *)0)
 	{
-		sprintf(s, "Expected %s but was <NULL>", expected);
+		sprintf(s, "Expected \"%s\" but was <NULL>", expected);
 		comparison = 0;
 	}
 	else
 	{
 		comparison = strcmp(expected, actual) == 0;
-		sprintf(s, "Expected %s but was %s", expected, actual);	
+		sprintf(s, "Expected \"%s\" but was \"%s\"", expected, actual);	
 	}
 
 	seatest_simple_test_result(comparison, s, function, line);	
