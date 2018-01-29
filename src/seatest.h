@@ -6,8 +6,8 @@
 Defines
 */
 
-#define SEATEST_VERSION "1.0"
-#define SEATEST_PROJECT_HOME "http://code.google.com/p/seatest/"
+#define SEATEST_VERSION "1.1"
+#define SEATEST_PROJECT_HOME "https://github.com/keithn/seatest"
 #define SEATEST_PRINT_BUFFER_SIZE 100000
 
 #ifdef ABORT_TEST_IF_ASSERT_FAIL
