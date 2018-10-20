@@ -61,9 +61,9 @@ void test_hello_world()
 //
 void test_fixture_hello( void )
 {
-        test_fixture_start();      
-        run_test(test_hello_world);   
-        test_fixture_end();       
+        test_fixture_start();
+        run_test(test_hello_world);
+        test_fixture_end();
 }
 
 //
@@ -71,7 +71,7 @@ void test_fixture_hello( void )
 //
 void all_tests( void )
 {
-        test_fixture_hello();   
+        test_fixture_hello();
 }
 
 //
@@ -98,13 +98,13 @@ The general approach to fixtures generally looks like the following:
 ```c
 void my_test_fixture()
 {
-        test_fixture_start();   
+        test_fixture_start();
         fixture_setup(my_test_setup);
         fixture_teardown(my_test_teardown);
 
         run_test(test_one);
         run_test(test_two);
-        
+
         test_fixture_end();
 }
 ```
@@ -113,7 +113,7 @@ void my_test_fixture()
 
 Note, this section is currently getting built up and might seem a bit incomplete at times. It needs building into a full tutorial and a description on how to do embedded C unit testing.
 
-1. Download the source code 
+1. Download the source code
 
 2. include "seatest.c" and "seatest.h" in your project, make sure the .h is in a directory your compiler will find when including headers.
 
