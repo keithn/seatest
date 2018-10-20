@@ -1,12 +1,13 @@
-#Seatest
+# Seatest
 
-A simple unit testing framework for C based on the xUnit style of unit testing. Ideal for Test Driven Development ( TDD ). Designed to be portable.
+A simple unit testing framework for C based on the xUnit style of unit testing. Ideal for Test Driven Development (TDD). Designed to be portable.
 
 If you are new to TDD / Unit Testing, you may wish to jump straight to Getting Started.
 
-If you have experience with other xUnit type frameworks, you may wish to read through the general technical overview of SeaTest?
+If you have experience with other xUnit type frameworks, you may wish to read through the general technical overview of SeaTest.
 
 ## Features
+
 - xUnit style asserts
 - Fixtures
 - Setup / Teardown
@@ -19,6 +20,7 @@ If you have experience with other xUnit type frameworks, you may wish to read th
 - Cross platform
 
 ## Asserts
+
 - assert_true
 - assert_false
 - assert_int_equal
@@ -38,7 +40,8 @@ If you have experience with other xUnit type frameworks, you may wish to read th
 - assert_string_ends_with
 
 ## Seatest Hello World
-```C
+
+```c
 #include "seatest.h"
 //
 // create a test...
@@ -81,7 +84,8 @@ int main( int argc, char** argv )
 ```
 
 ## Fixtures
-In many xUnit style testing frameworks, tests and testfixtures are automatically discovered. So all you do is write your test, or fixture, and they are automatically run. Which is great! You never forget to include a test. However in C, there is no language mechanism to do this. (Some of the C unit testing frameworks make use of something like python to find the tests automatically)
+
+In many xUnit style testing frameworks, tests and testfixtures are automatically discovered. So all you do is write your test, or fixture, and they are automatically run. Which is great! You never forget to include a test. However in C, there is no language mechanism to do this. (Some of the C unit testing frameworks make use of something like python to find the tests automatically.)
 
 So Seatest requires you to explicitly register all your tests and fixtures. If you are in the habit of "red green refactor", this limitation shouldn't be too much of a problem. The main reason for this is that the framework needs to be easily used in embedded environments / compilers / IDEs. The current prime target being PICs and the MPLAB IDE. So things are kept to pretty vanilla C code.
 
@@ -89,8 +93,9 @@ SeaTest? was built to support embedded development using a dual compiler approac
 
 One of the big factors was to make sure seatest didn't use any dynamic memory allocation (like malloc, etc). Or store a big list of tests in some sturcture. All the test fixtures and tests are created through the structure of the code itself. Making it simple, quick, and very straightforward.
 
-The general approach to fixtures generally looks like the following :-
-```C
+The general approach to fixtures generally looks like the following:
+
+```c
 void my_test_fixture()
 {
         test_fixture_start();   
@@ -105,22 +110,23 @@ void my_test_fixture()
 ```
 
 ## Getting Started
-Note, this section is currently getting built up and might seem a bit incomplete at times . It needs building into a full tutorial and a description on how to do embedded C unit testing
+
+Note, this section is currently getting built up and might seem a bit incomplete at times. It needs building into a full tutorial and a description on how to do embedded C unit testing.
 
 1. Download the source code 
 
-2) include "seatest.c" and "seatest.h" in your project, make sure the .h is in a directory your compiler will find when including headers.
+2. include "seatest.c" and "seatest.h" in your project, make sure the .h is in a directory your compiler will find when including headers.
 
-3) create a function called something like "alltests" which will combine all your test suites together
+3. create a function called something like "alltests" which will combine all your test suites together
 
-4) In your main create the test runner
+4. In your main create the test runner
 
-5) Create a test suite
+5. Create a test suite
 
-6) Create tests
+6. Create tests
 
-7) Run
+7. Run
+
 ## Abort test on first test failure
+
 Normally Seatest will run all asserts in a test no matter whether they pass or fail. If you want the test to abort on the first failure then set the #define ABORT_TEST_IF_ASSERT_FAIL.
-
-
