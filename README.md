@@ -23,6 +23,7 @@ If you have experience with other xUnit type frameworks, you may wish to read th
 - assert_false
 - assert_int_equal
 - assert_ulong_equal
+- assert_size_t_equal
 - assert_string_equal
 - assert_n_array_equal
 - assert_bit_set

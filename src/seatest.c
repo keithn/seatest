@@ -192,6 +192,13 @@ void seatest_assert_ulong_equal(unsigned long expected, unsigned long actual, co
 	seatest_simple_test_result(expected==actual, s, function, line);	
 }
 
+void seatest_assert_size_t_equal(size_t expected, size_t actual, const char* function, unsigned int line)
+{
+	char s[SEATEST_PRINT_BUFFER_SIZE];
+	sprintf(s, "Expected %zu but was %zu", expected, actual);
+	seatest_simple_test_result(expected==actual, s, function, line);	
+}
+
 void seatest_assert_float_equal( float expected, float actual, float delta, const char* function, unsigned int line )
 {
 	char s[SEATEST_PRINT_BUFFER_SIZE];

@@ -6,8 +6,8 @@
 Defines
 */
 
-#define SEATEST_VERSION "1.0"
-#define SEATEST_PROJECT_HOME "http://code.google.com/p/seatest/"
+#define SEATEST_VERSION "1.1.0"
+#define SEATEST_PROJECT_HOME "https://github.com/mcci-usb/seatest/"
 #define SEATEST_PRINT_BUFFER_SIZE 100000
 
 #ifdef ABORT_TEST_IF_ASSERT_FAIL
@@ -34,6 +34,7 @@ void seatest_assert_true(int test, const char* function, unsigned int line);
 void seatest_assert_false(int test, const char* function, unsigned int line);
 void seatest_assert_int_equal(int expected, int actual, const char* function, unsigned int line);
 void seatest_assert_ulong_equal(unsigned long expected, unsigned long actual, const char* function, unsigned int line);
+void seatest_assert_size_t_equal(size_t expected, size_t actual, const char* function, unsigned int line);
 void seatest_assert_float_equal(float expected, float actual, float delta, const char* function, unsigned int line);
 void seatest_assert_double_equal(double expected, double actual, double delta, const char* function, unsigned int line);
 void seatest_assert_string_equal(char* expected, char* actual, const char* function, unsigned int line);
