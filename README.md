@@ -1,4 +1,4 @@
-#Seatest
+# Seatest
 
 A simple unit testing framework for C based on the xUnit style of unit testing. Ideal for Test Driven Development ( TDD ). Designed to be portable.
 
@@ -108,18 +108,17 @@ Note, this section is currently getting built up and might seem a bit incomplete
 
 1. Download the source code 
 
-2) include "seatest.c" and "seatest.h" in your project, make sure the .h is in a directory your compiler will find when including headers.
+2. include "seatest.c" and "seatest.h" in your project, make sure the .h is in a directory your compiler will find when including headers.
 
-3) create a function called something like "alltests" which will combine all your test suites together
+3. create a function called something like "alltests" which will combine all your test suites together
 
-4) In your main create the test runner
+4. In your main create the test runner
 
-5) Create a test suite
+5. Create a test suite
 
-6) Create tests
+6. Create tests
 
-7) Run
+7. Run
+
 ## Abort test on first test failure
-Normally Seatest will run all asserts in a test no matter whether they pass or fail. If you want the test to abort on the first failure then set the #define ABORT_TEST_IF_ASSERT_FAIL.
-
-
+Normally Seatest will run all asserts in a test no matter whether they pass or fail. If you want the test to abort on the first failure then set the `#define ABORT_TEST_IF_ASSERT_FAIL`.
