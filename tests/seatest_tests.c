@@ -72,5 +72,5 @@ void all_tests(void)
 
 int main(int argc, char** argv)
 {
-  return run_tests(all_tests) ? 0 : 1;
+  return run_tests(all_tests);
 }
