@@ -26,7 +26,7 @@ typedef void (*seatest_void_string)(char*);
 /*
 Declarations
 */
-void (*seatest_simple_test_result)(int passed, char* reason, const char* function, unsigned int line);
+extern void (*seatest_simple_test_result)(int passed, char* reason, const char* function, unsigned int line);
 void seatest_test_fixture_start(char* filepath);
 void seatest_test_fixture_end( void );
 void seatest_simple_test_result_log(int passed, char* reason, const char* function, unsigned int line);
@@ -76,7 +76,6 @@ Fixture / Test Management
 
 void fixture_setup(void (*setup)( void ));
 void fixture_teardown(void (*teardown)( void ));
-//#define run_test(test) do { if(seatest_should_run(__FILE__, #test)) {seatest_suite_setup(); seatest_setup(); test(); seatest_teardown(); seatest_suite_teardown(); seatest_run_test(__FILE__, #test);  }} while (0)
 #define run_test(test) do { seatest_test(__FILE__, #test, test);} while (0)
 #define test_fixture_start() do { seatest_test_fixture_start(__FILE__); } while (0)
 #define test_fixture_end() do { seatest_test_fixture_end();} while (0)
