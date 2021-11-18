@@ -37,7 +37,7 @@ VAR,[VAR="no, unknown"
 #       need to be "-G0 -rdatashared" for strictmode but
 #       I am not sure what effect that has really.         - guidod
 for ac_arg dnl
-in "-pedantic  % -Wall -ansi -pedantic"       dnl   GCC
+in "-ansi  % -Wall -ansi"       dnl   GCC
    "-xstrconst % -v -Xc"                      dnl Solaris C
    "-std1      % -verbose -w0 -warnprotos -std1" dnl Digital Unix
    " % -qlanglvl=ansi -qsrcmsg -qinfo=all:noppt:noppc:noobs:nocnd" dnl AIX
