@@ -1,0 +1,4 @@
+Makefile
+bin/
+config.log
+config.status
