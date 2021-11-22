@@ -1,4 +1,8 @@
 #include "seatest.h"
+
+#define SECONDS_TO_MILLISECONDS(sec) sec * 1000
+#define MICRO_SECONDS_TO_MILLISECONDS(microsec) microsec / 1000
+
 #include <string.h>
 #ifdef WIN32
 #include "windows.h"
@@ -10,7 +14,14 @@ int seatest_is_string_equal_i(const char* s1, const char* s2)
 
 #else
 #include <strings.h>
-unsigned int GetTickCount() { return 0;}
+#include <sys/time.h>
+
+unsigned int GetTickCount() {
+	struct timeval current_time;
+	gettimeofday(&current_time, NULL);
+	return SECONDS_TO_MILLISECONDS(current_time.tv_sec) + MICRO_SECONDS_TO_MILLISECONDS(current_time.tv_usec);
+}
+
 void _getch( void ) { }
 int seatest_is_string_equal_i(const char* s1, const char* s2)
 {
